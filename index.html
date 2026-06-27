@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AoPS Physics Simulations</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 28px 16px;
+    }
+
+    .container { max-width: 1400px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      font-size: 2rem;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.25);
+      margin-bottom: 6px;
+    }
+    header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.88;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(6px);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+
+    .controls input[type="text"] {
+      flex: 1 1 220px;
+      min-width: 160px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    /* custom multi-select dropdown */
+    .dropdown-wrap {
+      position: relative;
+    }
+    .dropdown-btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      background: white;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .dropdown-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      padding: 8px;
+      min-width: 220px;
+      z-index: 100;
+    }
+    .dropdown-panel.open { display: block; }
+    .dropdown-actions {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .dropdown-actions button {
+      flex: 1;
+      padding: 4px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.76rem;
+      background: #f9f9f9;
+    }
+    .dropdown-actions button:hover { background: #eee; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 3px 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .dropdown-item:hover { background: #f3f4f6; }
+    .dropdown-item input { accent-color: #7c3aed; }
+
+    select.sort-select {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.82rem;
+      background: white;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .group-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: white;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .group-check input { accent-color: white; }
+
+    /* ── Results info ── */
+    .results-info {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.78rem;
+      padding: 0 2px 8px;
+    }
+
+    /* ── Group header ── */
+    .group-header {
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 18px 0 8px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+    }
+
+    /* ── Grid & Cards ── */
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .sim-card {
+      position: relative;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .sim-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    /* Copy-GitHub-Pages-URL button (top-right of each card) */
+    .copy-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 5;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border: none;
+      border-radius: 5px;
+      background: rgba(0,0,0,0.45);
+      color: white;
+      font-size: 0.78rem;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.12s, background 0.12s;
+    }
+    .sim-card:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: rgba(0,0,0,0.75); }
+    .copy-btn.copied { background: #16a34a; opacity: 1; }
+
+    .card-preview {
+      height: 80px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .card-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 6px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #222;
+      line-height: 1.3;
+    }
+
+    .course-badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      max-width: fit-content;
+    }
+
+    .card-desc {
+      font-size: 0.67rem;
+      color: #555;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-dates {
+      font-size: 0.6rem;
+      color: #999;
+      margin-top: auto;
+      padding-top: 2px;
+    }
+
+    .card-url {
+      font-size: 0.58rem;
+      color: #aaa;
+      font-family: monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .no-results {
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 40px 0;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.8rem;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.4rem; }
+      .sim-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🔬 AoPS Physics Simulations</h1>
+    <p class="subtitle">Interactive simulations across all AoPS physics courses</p>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search by name or description..." autocomplete="off">
+
+    <div class="dropdown-wrap" id="courseDropWrap">
+      <button class="dropdown-btn" id="courseDropBtn">Courses (9/9)</button>
+      <div class="dropdown-panel" id="courseDropPanel">
+        <div class="dropdown-actions">
+          <button id="allOnBtn">All On</button>
+          <button id="allOffBtn">All Off</button>
+        </div>
+        <div id="courseCheckboxes"></div>
+      </div>
+    </div>
+
+    <select class="sort-select" id="sortSelect">
+      <option value="nameAZ">Name A→Z</option>
+      <option value="nameZA">Name Z→A</option>
+      <option value="createdOld">Date Created (oldest first)</option>
+      <option value="createdNew">Date Created (newest first)</option>
+      <option value="editedOld">Last Edited (oldest first)</option>
+      <option value="editedNew">Last Edited (newest first)</option>
+    </select>
+
+    <label class="group-check">
+      <input type="checkbox" id="groupCheck"> Group by course
+    </label>
+  </div>
+
+  <div class="results-info" id="resultsInfo"></div>
+  <div id="content"></div>
+
+  <footer>
+    <p>AoPS Curriculum &bull; Physics Simulations Index</p>
+    <p style="font-size:0.7rem;opacity:0.6;margin-top:4px">Auto-generated 2026-06-27</p>
+  </footer>
+</div>
+
+<script>
+const COURSES = [
+  {
+    "id": "175",
+    "folder": "175_PhysicsWOOT_1",
+    "name": "PhysicsWOOT 1"
+  },
+  {
+    "id": "190",
+    "folder": "190_FMA_Problem_Series",
+    "name": "F=MA Problem Series"
+  },
+  {
+    "id": "268",
+    "folder": "268_Introduction_to_Physics",
+    "name": "Introduction to Physics"
+  },
+  {
+    "id": "303",
+    "folder": "303_Academy_Intro_Mechanics",
+    "name": "Academy Intro Mechanics"
+  },
+  {
+    "id": "405",
+    "folder": "405_Physics_1_Mechanics",
+    "name": "Physics 1: Mechanics"
+  },
+  {
+    "id": "413",
+    "folder": "413_Academy_Physics_Waves",
+    "name": "Academy Physics Waves"
+  },
+  {
+    "id": "443",
+    "folder": "443_Academy_Science_3",
+    "name": "Academy Science 3"
+  },
+  {
+    "id": "539",
+    "folder": "539_Middle_School_Physics_1",
+    "name": "Middle School Physics 1"
+  },
+  {
+    "id": "541",
+    "folder": "541_Academy_Summer_STEM_3_4",
+    "name": "Academy Summer STEM 3/4"
+  },
+  {
+    "id": "544",
+    "folder": "544_Middle_School_Science_Contests",
+    "name": "Middle School Science Contests"
+  }
+];
+const SIMULATIONS = [
+  {
+    "url": "175_PhysicsWOOT_1/charges_and_fields.html",
+    "pagesUrl": "https://aops-curriculum.github.io/175_PhysicsWOOT_1/charges_and_fields.html",
+    "title": "Charges and Fields",
+    "description": "Place positive and negative point charges on a grid and observe the resulting electric field vectors and equipotential lines. Students can measure field strength with a sensor and explore Coulomb's law qualitatively.",
+    "courseId": "175",
+    "screenshotUrl": "screenshots/175_PhysicsWOOT_1_charges_and_fields.png",
+    "dateCreated": "2026-06-18T13:48:38-04:00",
+    "dateModified": "2026-06-26T10:17:05-04:00"
+  },
+  {
+    "url": "175_PhysicsWOOT_1/magnet_coil.html",
+    "pagesUrl": "https://aops-curriculum.github.io/175_PhysicsWOOT_1/magnet_coil.html",
+    "title": "Faraday Induction — Magnet and Coil",
+    "description": "Move a bar magnet through or near a coil of wire and watch the induced EMF and current change in real time. Demonstrates Faraday's law of induction and Lenz's law through the relationship between magnet motion and current direction.",
+    "courseId": "175",
+    "screenshotUrl": "screenshots/175_PhysicsWOOT_1_magnet_coil.png",
+    "dateCreated": "2026-06-18T13:48:38-04:00",
+    "dateModified": "2026-06-26T11:36:33-04:00"
+  },
+  {
+    "url": "175_PhysicsWOOT_1/photoelectric.html",
+    "pagesUrl": "https://aops-curriculum.github.io/175_PhysicsWOOT_1/photoelectric.html",
+    "title": "Photoelectric Effect",
+    "description": "Shine light of adjustable frequency and intensity on a metal surface and observe whether electrons are ejected and with what energy. Demonstrates the photoelectric effect and why frequency, not intensity, determines whether emission occurs.",
+    "courseId": "175",
+    "screenshotUrl": "screenshots/175_PhysicsWOOT_1_photoelectric.png",
+    "dateCreated": "2026-06-18T13:48:38-04:00",
+    "dateModified": "2026-06-27T02:44:56-04:00"
+  },
+  {
+    "url": "175_PhysicsWOOT_1/wave_on_string.html",
+    "pagesUrl": "https://aops-curriculum.github.io/175_PhysicsWOOT_1/wave_on_string.html",
+    "title": "Wave on a String",
+    "description": "Drive one end of a string with adjustable frequency and amplitude and choose fixed or loose boundary conditions. Shows how standing waves form, nodes and antinodes appear, and damping affects wave behavior.",
+    "courseId": "175",
+    "screenshotUrl": "screenshots/175_PhysicsWOOT_1_wave_on_string.png",
+    "dateCreated": "2026-06-18T13:48:38-04:00",
+    "dateModified": "2026-06-27T02:44:56-04:00"
+  },
+  {
+    "url": "190_FMA_Problem_Series/rotatingring.html",
+    "pagesUrl": "https://aops-curriculum.github.io/190_FMA_Problem_Series/rotatingring.html",
+    "title": "Rotating Ring",
+    "description": "Visualize a rotating ring with a marked point and velocity vector showing how tangential velocity always points perpendicular to the rotation axis while the point travels in a circle.",
+    "courseId": "190",
+    "screenshotUrl": "screenshots/190_FMA_Problem_Series_rotatingring.png",
+    "dateCreated": "2026-06-18T23:40:44-04:00",
+    "dateModified": "2026-06-27T02:57:40-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/balance_export.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/balance_export.html",
+    "title": "Balance Export",
+    "description": "Balance bricks on a lever by placing them at different distances from the pivot, learning that equilibrium depends on both weight and position.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_balance_export.png",
+    "dateCreated": "2026-06-18T15:04:37-04:00",
+    "dateModified": "2026-06-25T14:30:08-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/balance_game.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/balance_game.html",
+    "title": "Balance Game",
+    "description": "Drag weights onto a balance beam and find the combination that tips it exactly level. Builds intuition for torque and the law of the lever through a hands-on puzzle.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_balance_game.png",
+    "dateCreated": "2026-06-17T15:56:04-04:00",
+    "dateModified": "2026-06-26T10:17:59-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/balance_lab.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/balance_lab.html",
+    "title": "Balance Lab",
+    "description": "Place masses at measured positions on a balance beam and predict whether it tips left, right, or stays level. An open-ended exploration of torque using real number readouts.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_balance_lab.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-26T10:24:03-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/circuit_lab.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/circuit_lab.html",
+    "title": "Circuit Lab",
+    "description": "Wire batteries, bulbs, and switches on a virtual board; the circuit solves Ohm's law in real time and shows current, voltage, and resistance values. A drag-and-drop DC circuit builder for exploring series and parallel connections.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_circuit_lab.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-25T21:18:45-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/hookes_law.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/hookes_law.html",
+    "title": "Hooke's Law",
+    "description": "Stretch or compress a spring by dragging and watch the force arrow scale linearly with displacement. Demonstrates Hooke's law F = kx and lets students measure the spring constant from the force-vs-extension graph.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_hookes_law.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-26T10:18:02-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/newton_cannon.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/newton_cannon.html",
+    "title": "Newton's Cannon",
+    "description": "Fire a cannon at increasing velocities to reveal how gravity bends projectile paths—from falling objects, to parabolic arcs, to circular orbits.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_newton_cannon.png",
+    "dateCreated": "2026-06-24T16:43:24-04:00",
+    "dateModified": "2026-06-25T20:23:23-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/pendulum_lab.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/pendulum_lab.html",
+    "title": "Pendulum Lab",
+    "description": "Set pendulum length, mass, and starting angle and watch it swing, with optional period timer and energy graph. Demonstrates that period depends on length but not mass for small angles.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_pendulum_lab.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/spring_stretch.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/spring_stretch.html",
+    "title": "Spring Stretch",
+    "description": "Hang a mass on a spring and measure the stretch with a ruler to determine the spring constant. A single-spring lab calibrated to match expected classroom histogram values.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_spring_stretch.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-25T14:37:32-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/spring_stretch_zoom.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/spring_stretch_zoom.html",
+    "title": "Spring Stretch",
+    "description": "Same spring-stretch simulation but with a zoom slider for reading the ruler more precisely. Supports more accurate spring-constant measurement in the same physical setup.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_spring_stretch_zoom.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/stretchrod.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/stretchrod.html",
+    "title": "Stretch Rod",
+    "description": "Bend a rod (modeling a DNA segment) with a slider to explore how curvature creates compression on the inner strand (shown in red) and tension on the outer strand (shown in blue).",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_stretchrod.png",
+    "dateCreated": "2026-06-18T23:40:29-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/TASEP.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/TASEP.html",
+    "title": "TASEP",
+    "description": "Particles enter at rate α, hop through a 1D lattice, and exit at rate β. Adjust these rates to explore how density and flux emerge from simple rules—a model of traffic and molecular motor transport.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_TASEP.png",
+    "dateCreated": "2026-06-18T23:40:29-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/traffic.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/traffic.html",
+    "title": "Traffic",
+    "description": "Explore how traffic jams spontaneously form on a circular road from simple driving rules. Adjust car density, road length, and random braking to see how these factors affect traffic flow.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_traffic.png",
+    "dateCreated": "2026-06-18T23:40:29-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/trafficrunningspeed.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/trafficrunningspeed.html",
+    "title": "Traffic Running Speed",
+    "description": "Investigate how car density and the probability of random braking affect average traffic speed in a cellular automaton, revealing emergent patterns in vehicle flow.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_trafficrunningspeed.png",
+    "dateCreated": "2026-06-18T23:40:29-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/trafficspeed.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/trafficspeed.html",
+    "title": "Traffic Speed",
+    "description": "Model traffic flow with a cellular automaton where cars follow simple rules. Adjust vehicle density, road length, and braking probability to explore how traffic jams form and affect average speed.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_trafficspeed.png",
+    "dateCreated": "2026-06-18T23:40:29-04:00",
+    "dateModified": "2026-06-27T02:39:13-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/traffic_model.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/traffic_model.html",
+    "title": "Traffic Model",
+    "description": "Explore how traffic jams emerge when cars follow simple rules: accelerate if there's space, brake to avoid crashes, and occasionally slow down randomly in this cellular automaton model.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_traffic_model.png",
+    "dateCreated": "2026-06-24T16:29:34-04:00",
+    "dateModified": "2026-06-25T15:09:12-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/under_pressure.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/under_pressure.html",
+    "title": "Fluid Pressure",
+    "description": "Drag a pressure gauge to different depths in a water tank and read the pressure in kPa. Demonstrates that fluid pressure increases linearly with depth according to P = P0 + rho*g*h.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_under_pressure.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-26T10:18:03-04:00"
+  },
+  {
+    "url": "268_Introduction_to_Physics/measure_spring/index.html",
+    "pagesUrl": "https://aops-curriculum.github.io/268_Introduction_to_Physics/measure_spring/index.html",
+    "title": "&#8234;Masses and Springs: Basics&#8236;",
+    "description": "PhET Masses and Springs: Basics — hang masses on springs and measure the extension to determine spring constants. A standard introductory lab for Hooke's law.",
+    "courseId": "268",
+    "screenshotUrl": "screenshots/268_Introduction_to_Physics_measure_spring_index.png",
+    "dateCreated": "2026-05-20T15:11:05-04:00",
+    "dateModified": "2026-06-01T15:05:15-04:00"
+  },
+  {
+    "url": "303_Academy_Intro_Mechanics/vector_addition.html",
+    "pagesUrl": "https://aops-curriculum.github.io/303_Academy_Intro_Mechanics/vector_addition.html",
+    "title": "Vector Addition",
+    "description": "Place vectors on a grid, drag their tips to set magnitude and direction, and see the resultant vector drawn automatically. Builds geometric and component methods for adding vectors in two dimensions.",
+    "courseId": "303",
+    "screenshotUrl": "screenshots/303_Academy_Intro_Mechanics_vector_addition.png",
+    "dateCreated": "2026-06-18T13:53:13-04:00",
+    "dateModified": "2026-06-26T10:17:31-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/collision_1d.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/collision_1d.html",
+    "title": "1D Collisions",
+    "description": "Set masses and initial velocities of two sliding objects, choose elastic or inelastic collision, and watch momentum and kinetic energy before and after. Explores conservation of momentum and the coefficient of restitution.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_collision_1d.png",
+    "dateCreated": "2026-06-18T13:48:32-04:00",
+    "dateModified": "2026-06-27T02:22:21-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/energy_skate_park.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/energy_skate_park.html",
+    "title": "Skate Park",
+    "description": "Place a skater on a custom track with adjustable gravity and friction, and watch kinetic and potential energy bars shift as the skater rolls. Demonstrates conservation of mechanical energy and the effect of friction on total energy.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_energy_skate_park.png",
+    "dateCreated": "2026-06-18T13:48:32-04:00",
+    "dateModified": "2026-06-25T14:36:47-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/gas_box.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/gas_box.html",
+    "title": "Gas in a Box",
+    "description": "Watch particles bounce elastically in a box; adjust temperature, volume, or particle count and observe pressure changes. Connects the macroscopic ideal gas law to the microscopic motion of individual molecules.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_gas_box.png",
+    "dateCreated": "2026-06-18T13:48:32-04:00",
+    "dateModified": "2026-06-27T02:22:21-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/lc_circuit.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/lc_circuit.html",
+    "title": "LC Circuit",
+    "description": "Watch charge and current oscillate between a capacitor and inductor in an LC circuit, displayed as animated arrows and time graphs. Illustrates the analogy between electrical oscillations and a mass-spring system.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_lc_circuit.png",
+    "dateCreated": "2026-06-18T13:48:32-04:00",
+    "dateModified": "2026-06-27T02:22:21-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/measure.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/measure.html",
+    "title": "Pixel Measure",
+    "description": "Students establish a calibration scale by referencing a known measurement in an image. They then measure distances in photographs or diagrams, converting pixels to feet, meters, and other units.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_measure.png",
+    "dateCreated": "2026-06-18T13:48:32-04:00",
+    "dateModified": "2026-06-27T02:22:21-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/orbits.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/orbits.html",
+    "title": "Orbits",
+    "description": "Set initial positions and velocities of up to four bodies and watch them orbit under mutual gravity. Explores Kepler's laws, stable orbits, and how mass and speed determine orbital shape.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_orbits.png",
+    "dateCreated": "2026-06-18T13:48:32-04:00",
+    "dateModified": "2026-06-27T02:22:21-04:00"
+  },
+  {
+    "url": "405_Physics_1_Mechanics/stickcylinder.html",
+    "pagesUrl": "https://aops-curriculum.github.io/405_Physics_1_Mechanics/stickcylinder.html",
+    "title": "Stick on Cylinder",
+    "description": "Observe how a uniform stick maintains equilibrium on a cylinder surface as you adjust the radius, length, and tilt angle, discovering how the center of mass position relative to the contact point affects stability.",
+    "courseId": "405",
+    "screenshotUrl": "screenshots/405_Physics_1_Mechanics_stickcylinder.png",
+    "dateCreated": "2026-06-18T23:40:32-04:00",
+    "dateModified": "2026-06-27T02:22:21-04:00"
+  },
+  {
+    "url": "413_Academy_Physics_Waves/harmonics_builder.html",
+    "pagesUrl": "https://aops-curriculum.github.io/413_Academy_Physics_Waves/harmonics_builder.html",
+    "title": "Harmonics Builder",
+    "description": "Adjust the amplitude of each harmonic up to the 11th and see the waveform that results from their sum. Demonstrates Fourier synthesis and how complex periodic waves are built from sine waves.",
+    "courseId": "413",
+    "screenshotUrl": "screenshots/413_Academy_Physics_Waves_harmonics_builder.png",
+    "dateCreated": "2026-06-18T13:53:23-04:00",
+    "dateModified": "2026-06-27T02:48:02-04:00"
+  },
+  {
+    "url": "413_Academy_Physics_Waves/two_source_interference.html",
+    "pagesUrl": "https://aops-curriculum.github.io/413_Academy_Physics_Waves/two_source_interference.html",
+    "title": "Two-Speaker Interference",
+    "description": "Two speaker sources emit circular waves; a 2D interference pattern appears showing bright constructive and dark destructive fringes. Students can adjust frequency and source separation to see how fringe spacing changes.",
+    "courseId": "413",
+    "screenshotUrl": "screenshots/413_Academy_Physics_Waves_two_source_interference.png",
+    "dateCreated": "2026-06-18T13:53:23-04:00",
+    "dateModified": "2026-06-27T02:48:02-04:00"
+  },
+  {
+    "url": "443_Academy_Science_3/forces_basics.html",
+    "pagesUrl": "https://aops-curriculum.github.io/443_Academy_Science_3/forces_basics.html",
+    "title": "Forces: Tug of War and Motion",
+    "description": "Apply forces to objects in a tug-of-war setup and observe acceleration, friction, and motion. Demonstrates Newton's second law and the interplay between applied force, friction, and net force.",
+    "courseId": "443",
+    "screenshotUrl": "screenshots/443_Academy_Science_3_forces_basics.png",
+    "dateCreated": "2026-06-18T13:53:33-04:00",
+    "dateModified": "2026-06-27T02:50:59-04:00"
+  },
+  {
+    "url": "443_Academy_Science_3/natural_selection.html",
+    "pagesUrl": "https://aops-curriculum.github.io/443_Academy_Science_3/natural_selection.html",
+    "title": "Natural Selection: Bunny Population",
+    "description": "Introduce wolves, food shortages, or environmental changes to a rabbit population and watch how fur color evolves over generations. Demonstrates natural selection and how selection pressure drives population-level trait changes.",
+    "courseId": "443",
+    "screenshotUrl": "screenshots/443_Academy_Science_3_natural_selection.png",
+    "dateCreated": "2026-06-18T13:53:33-04:00",
+    "dateModified": "2026-06-27T02:50:59-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/color-mixer.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/color-mixer.html",
+    "title": "Color Mixer",
+    "description": "Mix RGB light sources to explore additive color mixing.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_color-mixer.png",
+    "dateCreated": "2026-01-08T15:27:35-05:00",
+    "dateModified": "2026-06-27T03:15:37-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/color-mixing-game.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/color-mixing-game.html",
+    "title": "Color Mixing Game",
+    "description": "Test your color mixing skills in this interactive game.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_color-mixing-game.png",
+    "dateCreated": "2026-01-08T15:38:40-05:00",
+    "dateModified": "2026-06-27T03:15:37-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/rgb-channel-separator.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/rgb-channel-separator.html",
+    "title": "RGB Channel Separator",
+    "description": "Separate images into red, green, and blue channels to understand color addition.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_rgb-channel-separator.png",
+    "dateCreated": "2026-01-20T14:01:36-05:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/fire_tower.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/fire_tower.html",
+    "title": "Fire Tower",
+    "description": "Interactive fire tower simulation exploring light and visibility.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_fire_tower.png",
+    "dateCreated": "2025-11-12T15:07:53-05:00",
+    "dateModified": "2026-06-26T14:37:23-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/shadow_puppet.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/shadow_puppet.html",
+    "title": "Shadow Puppet Show",
+    "description": "Create shadow puppets and explore how shadows form.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_shadow_puppet.png",
+    "dateCreated": "2025-07-22T08:58:06-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/table_shadow.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/table_shadow.html",
+    "title": "Shadow Demonstration",
+    "description": "Explore how shadows change with light position.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_table_shadow.png",
+    "dateCreated": "2025-07-22T10:47:51-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/table_shadow2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/table_shadow2.html",
+    "title": "Shadow Demonstration - Point Light",
+    "description": "See how point light sources create different shadow effects.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_table_shadow2.png",
+    "dateCreated": "2025-07-22T11:20:12-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/table/table_shadow.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/table/table_shadow.html",
+    "title": "Table Shadow Analysis",
+    "description": "Analyze shadow geometry with adjustable lines and intersections.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_table_table_shadow.png",
+    "dateCreated": "2025-07-22T13:06:56-07:00",
+    "dateModified": "2026-06-26T10:24:08-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/TracingPaper.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/TracingPaper.html",
+    "title": "Light Ray Simulation",
+    "description": "Trace light rays through different media and surfaces.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_TracingPaper.png",
+    "dateCreated": "2025-09-25T10:40:25-04:00",
+    "dateModified": "2026-06-24T16:20:15-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/sun_rays1.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/sun_rays1.html",
+    "title": "Sun Rays and Block Tower 1",
+    "description": "Explore how sunlight creates shadows with block structures.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_sun_rays1.png",
+    "dateCreated": "2025-07-21T10:20:38-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/sun_rays2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/sun_rays2.html",
+    "title": "Sun Rays and Block Tower 2",
+    "description": "Extended sun ray simulation with different configurations.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_sun_rays2.png",
+    "dateCreated": "2025-07-21T10:20:38-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/sun_rays3.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/sun_rays3.html",
+    "title": "Sun Rays and Block Tower 3",
+    "description": "Advanced sun ray and shadow exploration.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_sun_rays3.png",
+    "dateCreated": "2025-07-21T14:22:49-07:00",
+    "dateModified": "2026-06-25T14:37:09-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/sun_rays4.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/sun_rays4.html",
+    "title": "Sun Rays and Block Tower 4",
+    "description": "Final variation of sun ray shadow demonstrations.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_sun_rays4.png",
+    "dateCreated": "2025-07-21T14:22:49-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/SunBigger.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/SunBigger.html",
+    "title": "Sun Getting Larger",
+    "description": "Visualize what happens as the Sun's apparent size changes.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_SunBigger.png",
+    "dateCreated": "2025-07-08T11:38:03-07:00",
+    "dateModified": "2026-06-22T17:47:06-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/MoonFurther2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/MoonFurther2.html",
+    "title": "Moon Getting Farther",
+    "description": "Explore how the Moon's distance affects its appearance.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_MoonFurther2.png",
+    "dateCreated": "2025-07-08T11:39:28-07:00",
+    "dateModified": "2026-06-22T17:47:06-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/pluck_string.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/pluck_string.html",
+    "title": "Loaded String Simulation",
+    "description": "Pluck a virtual string and observe wave motion.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_pluck_string.png",
+    "dateCreated": "2026-01-05T10:35:48-08:00",
+    "dateModified": "2026-01-05T10:35:48-08:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/pluck_string-graph-with-timer.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/pluck_string-graph-with-timer.html",
+    "title": "Loaded String with Graph",
+    "description": "String simulation with real-time position graph and timer.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_pluck_string-graph-with-timer.png",
+    "dateCreated": "2026-01-05T10:35:48-08:00",
+    "dateModified": "2026-06-25T14:37:09-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/pluck_string-graph-with-timer-separated.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/pluck_string-graph-with-timer-separated.html",
+    "title": "Loaded String - Separated View",
+    "description": "String simulation with separated graph display.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_pluck_string-graph-with-timer-separated.png",
+    "dateCreated": "2026-01-05T10:35:48-08:00",
+    "dateModified": "2026-01-26T18:17:01-05:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/Source-Medium-Receiver.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/Source-Medium-Receiver.html",
+    "title": "Sound Wave Propagation",
+    "description": "Visualize how sound travels from source through medium to receiver.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_Source-Medium-Receiver.png",
+    "dateCreated": "2025-07-22T15:29:03-07:00",
+    "dateModified": "2025-07-22T15:29:03-07:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/Sound_Measurement.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/Sound_Measurement.html",
+    "title": "Sound Visualizer",
+    "description": "Capture and visualize sound waves from your microphone.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_Sound_Measurement.png",
+    "dateCreated": "2025-10-20T18:50:50-04:00",
+    "dateModified": "2025-10-20T18:50:50-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/Displacement-Time-Graph-Single.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/Displacement-Time-Graph-Single.html",
+    "title": "Vibration Position vs Time",
+    "description": "Graph displacement over time for a single vibrating point.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_Displacement-Time-Graph-Single.png",
+    "dateCreated": "2025-07-18T17:35:54-07:00",
+    "dateModified": "2026-06-27T01:38:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/vibration-position-time-canvas.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/vibration-position-time-canvas.html",
+    "title": "Vibration Position-Time (Canvas)",
+    "description": "Canvas-based vibration visualization.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_vibration-position-time-canvas.png",
+    "dateCreated": "2026-01-06T18:10:17-05:00",
+    "dateModified": "2026-06-27T01:41:24-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/Combine_Two_Waves.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/Combine_Two_Waves.html",
+    "title": "Combined Waves",
+    "description": "See what happens when two waves combine together.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_Combine_Two_Waves.png",
+    "dateCreated": "2025-07-08T08:59:40-07:00",
+    "dateModified": "2026-06-27T01:38:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/waves_meet.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/waves_meet.html",
+    "title": "Wave Superposition",
+    "description": "Explore constructive and destructive interference when waves meet.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_waves_meet.png",
+    "dateCreated": "2026-01-25T17:00:38-05:00",
+    "dateModified": "2026-06-26T23:12:23-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Newton-Speed-of-Sound-Measurement.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Newton-Speed-of-Sound-Measurement.html",
+    "title": "Speed of Sound Measurement",
+    "description": "Newton's method for measuring the speed of sound.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Newton-Speed-of-Sound-Measurement.png",
+    "dateCreated": "2025-11-16T12:18:57-08:00",
+    "dateModified": "2026-06-27T02:09:22-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/random-walk-mode1.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/random-walk-mode1.html",
+    "title": "Random Walk - Basic",
+    "description": "Simple random walk simulation to explore probabilistic motion.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/random-walk-mode1.png",
+    "dateCreated": "2025-09-15T12:46:58-04:00",
+    "dateModified": "2026-06-27T02:04:12-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/random-walk-mode2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/random-walk-mode2.html",
+    "title": "Random Walk - Interactive",
+    "description": "Interactive random walk with adjustable parameters.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/random-walk-mode2.png",
+    "dateCreated": "2025-09-15T12:46:58-04:00",
+    "dateModified": "2026-06-27T02:04:12-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/random-walk-mode3.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/random-walk-mode3.html",
+    "title": "Random Walk - Time-Limited",
+    "description": "Run time-limited random walk experiments and analyze results.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/random-walk-mode3.png",
+    "dateCreated": "2025-09-15T12:46:58-04:00",
+    "dateModified": "2026-06-27T02:04:12-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/two-microphones/index.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/two-microphones/index.html",
+    "title": "Two Microphones",
+    "description": "Compare sound detection with two microphone positions.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/two-microphones_index.png",
+    "dateCreated": "2025-12-11T20:47:18-08:00",
+    "dateModified": "2026-06-25T21:52:07-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/DepthPerceptionQuarter.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/DepthPerceptionQuarter.html",
+    "title": "Depth Perception – Quarter",
+    "description": "See how two eyes perceive depth by dragging a quarter between two illustrated eyes and watching the sight lines converge. Illustrates binocular parallax as the basis of depth perception.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_DepthPerceptionQuarter.png",
+    "dateCreated": "2026-02-10T13:18:37-05:00",
+    "dateModified": "2026-06-26T09:54:54-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/DepthPerceptionQuarter5.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/DepthPerceptionQuarter5.html",
+    "title": "Depth Perception – Quarter",
+    "description": "Drag a quarter and observe how the crossing angle of two sight lines changes with distance. A compact iframe-embedded version of the binocular parallax visualization.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_DepthPerceptionQuarter5.png",
+    "dateCreated": "2026-02-10T13:18:37-05:00",
+    "dateModified": "2026-06-26T09:54:54-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/TiltMirror.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/TiltMirror.html",
+    "title": "Tilt Mirror",
+    "description": "Drag a mirror on a table and tilt it to steer the reflection of a coin toward an eye. Shows how the angle of incidence equals the angle of reflection and how mirror tilt redirects light.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_TiltMirror.png",
+    "dateCreated": "2026-02-10T16:26:43-05:00",
+    "dateModified": "2026-06-26T14:37:23-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/corner_reflector.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/corner_reflector.html",
+    "title": "Corner Reflector",
+    "description": "Draw light rays in a 90-degree corner reflector and watch them bounce off both mirrors. Demonstrates why a corner reflector sends light back in the direction it came from, regardless of entry angle.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_corner_reflector.png",
+    "dateCreated": "2026-02-11T12:10:20-05:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/corner_reflector_parity.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/corner_reflector_parity.html",
+    "title": "Corner Reflector – Mirror Challenge",
+    "description": "Rotate and flip a corner reflector and submit your answer to see whether a light ray returns to the source. Explores how parity (left-right flip) is related to an odd number of reflections.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_corner_reflector_parity.png",
+    "dateCreated": "2026-02-12T00:30:59-05:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/depth-perception.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/depth-perception.html",
+    "title": "Depth Perception",
+    "description": "Click to draw sight lines from two eyes to dots at different depths. Reveals how the crossing angle of two lines of sight encodes distance.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_depth-perception.png",
+    "dateCreated": "2026-02-10T12:39:50-05:00",
+    "dateModified": "2026-06-26T09:54:53-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/noise_cancel_v1.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/noise_cancel_v1.html",
+    "title": "Noise Cancellation – 1 Component",
+    "description": "Adjust a single cancellation wave to perfectly cancel a noise signal and reduce the combined waveform to zero. Introduces destructive interference and active noise cancellation with one frequency component.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_noise_cancel_v1.png",
+    "dateCreated": "2026-02-11T17:11:12-05:00",
+    "dateModified": "2026-06-26T23:36:41-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/noise_cancel_v2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/noise_cancel_v2.html",
+    "title": "Noise Cancellation – 2 Components",
+    "description": "Adjust amplitude and phase sliders for two frequency components to cancel a complex noise waveform. Builds on the one-component version by requiring students to cancel two simultaneous frequencies.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_noise_cancel_v2.png",
+    "dateCreated": "2026-02-11T17:11:12-05:00",
+    "dateModified": "2026-06-26T23:36:41-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/noise_cancel_v3.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/noise_cancel_v3.html",
+    "title": "Noise Cancellation – 3 Components",
+    "description": "Tune three separate cancellation waves to eliminate a three-component noise signal using destructive interference. Extends active noise-cancellation concepts to more complex real-world sound spectra.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_noise_cancel_v3.png",
+    "dateCreated": "2026-02-11T17:11:12-05:00",
+    "dateModified": "2026-06-26T23:36:41-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/arrow_pair.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/arrow_pair.html",
+    "title": "Arrow Pair – Drag &amp; Rotate",
+    "description": "Drag, rotate, and flip two arrows on a canvas to match orientations. Supports exploring how mirror reflections change handedness compared with rotations.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_arrow_pair.png",
+    "dateCreated": "2026-02-17T09:59:53-05:00",
+    "dateModified": "2026-06-26T09:44:07-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/corner_reflector_handedness.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/corner_reflector_handedness.html",
+    "title": "Corner Reflector – Mirror Challenge 2",
+    "description": "Rotate and flip a corner reflector challenge to decide whether a reflected arrow matches the original or is flipped. Focuses on how an even or odd number of reflections determines parity.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_corner_reflector_handedness.png",
+    "dateCreated": "2026-02-12T00:30:59-05:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/corner_reflector_handedness_viz.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/corner_reflector_handedness_viz.html",
+    "title": "Corner Reflector – Second Reflection Visualization",
+    "description": "Static diagram showing an arrow object, its first reflection in one mirror, and the final double-reflected image in a 90-degree corner reflector. Visualizes how each reflection flips handedness.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_corner_reflector_handedness_viz.png",
+    "dateCreated": "2026-02-17T09:59:53-05:00",
+    "dateModified": "2026-06-26T09:54:52-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/corner_reflector_parity_viz.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/corner_reflector_parity_viz.html",
+    "title": "Corner Reflector – Reflection Visualization",
+    "description": "Animated diagram of a single reflection in one mirror of a corner reflector, showing the object and its flipped image. Clarifies how one reflection reverses orientation.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_corner_reflector_parity_viz.png",
+    "dateCreated": "2026-02-17T09:59:53-05:00",
+    "dateModified": "2026-06-26T09:54:52-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/rainbow_overhead.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/rainbow_overhead.html",
+    "title": "Rainbow Overhead – Drag &amp; Rotate",
+    "description": "Drag and rotate two overhead views of a rainbow to compare their orientations. Used to reason about symmetry and how a rainbow's arc appears relative to the sun-antisolar axis.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_rainbow_overhead.png",
+    "dateCreated": "2026-02-17T09:59:53-05:00",
+    "dateModified": "2026-06-26T10:02:33-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/string_tension_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/string_tension_sim.html",
+    "title": "String Tension &amp; Frequency",
+    "description": "Drag weight blocks onto a string over a pulley to change tension, then pluck the string and read the fundamental frequency. Demonstrates how tension affects pitch via f = (1/2L)√(T/μ).",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_string_tension_sim.png",
+    "dateCreated": "2026-02-26T01:21:39-05:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/waves_meet_dashed.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/waves_meet_dashed.html",
+    "title": "Wave Superposition Simulation",
+    "description": "Send two pulses of chosen shape and height toward each other on a string and watch them pass through each other. Shows the principle of superposition: the net displacement equals the sum of the individual waves.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_waves_meet_dashed.png",
+    "dateCreated": "2026-01-25T17:00:38-05:00",
+    "dateModified": "2026-06-26T23:12:23-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/angle_estimation_game.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/angle_estimation_game.html",
+    "title": "Angle of Reflection Game",
+    "description": "Look at a reflected ray and estimate the angle of incidence to earn a streak. Builds fluency with the law of reflection through rapid-fire practice.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_angle_estimation_game.png",
+    "dateCreated": "2026-03-05T01:41:52-05:00",
+    "dateModified": "2026-06-26T15:07:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/noise_cancel_v4.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/noise_cancel_v4.html",
+    "title": "Noise Cancellation – 2 Components (v4)",
+    "description": "Adjust amplitude and phase for two frequency components to reduce a combined waveform to silence. An alternate UI version of the two-component noise cancellation puzzle.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_noise_cancel_v4.png",
+    "dateCreated": "2026-02-11T17:11:12-05:00",
+    "dateModified": "2026-06-26T23:36:41-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/cylinder_reflection.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/cylinder_reflection.html",
+    "title": "Cylindrical Anamorphic Art Generator",
+    "description": "Upload an image and see how it would appear distorted when reflected in a cylindrical mirror. A cylindrical anamorphic art generator that applies the optics of curved mirrors.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_cylinder_reflection.png",
+    "dateCreated": "2026-03-18T15:04:24-04:00",
+    "dateModified": "2026-06-26T15:18:30-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_flyby.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_flyby.html",
+    "title": "Doppler Effect – Flyby",
+    "description": "Watch a moving sound source fly past an observer and count how many wave crests arrive per second. Illustrates the Doppler effect by showing compressed wavefronts ahead of the source and stretched ones behind.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_flyby.png",
+    "dateCreated": "2026-03-19T19:11:24-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_observer.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_observer.html",
+    "title": "Doppler Effect Simulation",
+    "description": "Move an observer toward or away from a stationary sound source and observe how the counted frequency changes. Demonstrates the observer-motion case of the Doppler effect.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_observer.png",
+    "dateCreated": "2026-03-19T19:11:24-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_source.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_source.html",
+    "title": "Doppler Effect – Moving Source",
+    "description": "Adjust the speed of a moving sound source and observe the wavefront pattern around it. Shows how source speed compresses wavefronts in the forward direction and stretches them behind.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_source.png",
+    "dateCreated": "2026-03-19T19:11:24-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/little_mirrors.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/little_mirrors.html",
+    "title": "Little Mirrors",
+    "description": "Place small mirrors to steer a light cone to a target screen. Students discover reflection angles and how to chain mirrors to redirect a beam.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_little_mirrors.png",
+    "dateCreated": "2026-03-20T09:29:20-04:00",
+    "dateModified": "2026-06-26T12:55:06-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/cylinder_reflection_eye.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/cylinder_reflection_eye.html",
+    "title": "Cylindrical Anamorphic Art Generator (with Observer Eye)",
+    "description": "Cylindrical anamorphic art generator with a movable observer eye to preview how the corrected image looks from the designated viewpoint. Connects the distorted flat drawing to the recovered image seen in the cylinder.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_cylinder_reflection_eye.png",
+    "dateCreated": "2026-03-18T15:04:24-04:00",
+    "dateModified": "2026-06-26T15:50:50-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/cyclops_mirrors2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/cyclops_mirrors2.html",
+    "title": "Cyclops Mirrors 2",
+    "description": "A cyclops views itself in a cylindrical mirror; adjust the mirror diameter to change the image. Shows how the radius of curvature of a convex mirror affects apparent image size and position.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_cyclops_mirrors2.png",
+    "dateCreated": "2026-03-24T12:07:39-04:00",
+    "dateModified": "2026-06-26T14:10:37-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/focal_length_radius_curvature.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/focal_length_radius_curvature.html",
+    "title": "Concave Mirror",
+    "description": "Slide a control to change the radius of curvature R of a concave mirror and see the focal length f = R/2 update live. Builds intuition for the geometric relationship between mirror shape and focal point.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_focal_length_radius_curvature.png",
+    "dateCreated": "2026-03-25T22:54:36-04:00",
+    "dateModified": "2026-06-26T14:16:57-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/cone_shrinking.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/cone_shrinking.html",
+    "title": "Concave Mirror – Ray Diagram",
+    "description": "Shows how a light cone cast by an object changes size as the object moves relative to a concave mirror. Students discover the relationship between object distance and projected image size.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/cone_shrinking.png",
+    "dateCreated": "2026-03-30T11:54:24-04:00",
+    "dateModified": "2026-06-26T10:02:33-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/R_f_need_equation.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/R_f_need_equation.html",
+    "title": "Concave Mirror – Radius &amp; Focal Length",
+    "description": "Static diagram of the Michelson speed-of-light setup showing the light path and octagonal mirror. Serves as a labeled reference diagram for why measuring round-trip time requires an equation.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_R_f_need_equation.png",
+    "dateCreated": "2026-03-30T09:16:40-04:00",
+    "dateModified": "2026-06-26T14:55:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/cone_shrinking.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/cone_shrinking.html",
+    "title": "Concave Mirror – Draggable Cone",
+    "description": "Shows how a light cone cast by an ice cream cone changes size as the object moves relative to a concave mirror. Students discover the relationship between object distance and image size.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_cone_shrinking.png",
+    "dateCreated": "2026-03-30T12:24:45-04:00",
+    "dateModified": "2026-06-26T09:54:50-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/telescope_mirror_shape.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/telescope_mirror_shape.html",
+    "title": "Telescope Mirror Types",
+    "description": "Switch among parabolic, spherical, elliptical, and hyperbolic mirror shapes while adding rays to see how each conic section focuses parallel light. Reveals why parabolic mirrors are ideal for telescopes.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_telescope_mirror_shape.png",
+    "dateCreated": "2026-03-30T13:39:27-04:00",
+    "dateModified": "2026-06-26T13:44:07-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/concave_mirror.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/concave_mirror.html",
+    "title": "Concave Mirror",
+    "description": "Add light rays and circular wavefronts around an interactive concave mirror, then zoom and pan to see where they converge. Provides a free-form ray-tracing sandbox for a concave mirror.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_concave_mirror.png",
+    "dateCreated": "2026-03-31T00:30:58-04:00",
+    "dateModified": "2026-06-26T11:43:19-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/magnification_closer_than_focus.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/magnification_closer_than_focus.html",
+    "title": "Concave Mirror – Draggable Cone",
+    "description": "Drag an ice cream cone toward a concave mirror to watch the image flip and magnify as the object passes through the focal point. Shows how image type and magnification depend on object distance relative to f.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_magnification_closer_than_focus.png",
+    "dateCreated": "2026-03-30T12:24:45-04:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/string_length_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/string_length_sim.html",
+    "title": "String Length &amp; Frequency",
+    "description": "Drag a hanging weight to shorten or lengthen a vibrating string, then pluck it to hear the resulting frequency. Demonstrates how string length controls pitch at fixed tension.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_string_length_sim.png",
+    "dateCreated": "2026-04-02T14:20:05-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/measure_light_speed.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/measure_light_speed.html",
+    "title": "Measure the Speed of Light",
+    "description": "Drag equipment onto two mountain peaks to recreate Michelson's 1926 experiment and measure the speed of light. Students send a light pulse, adjust mirror spin rate, and calculate c.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_measure_light_speed.png",
+    "dateCreated": "2026-04-08T01:09:30-04:00",
+    "dateModified": "2026-06-26T15:07:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/globe_measure.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/globe_measure.html",
+    "title": "Globe Distance Measurer",
+    "description": "Click two cities on an interactive 3D globe to measure the great-circle distance between them. Supports lessons on Eratosthenes's method and the geometry of Earth's surface.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_globe_measure.png",
+    "dateCreated": "2026-04-08T09:33:39-04:00",
+    "dateModified": "2026-06-22T15:20:38-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/rotate_octagon.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/rotate_octagon.html",
+    "title": "Michelson Speed of Light Experiment",
+    "description": "Spin the octagonal mirror in the Michelson apparatus and see whether the return beam hits the observer's eye. Focuses on the discrete-face geometry of the rotating mirror.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_rotate_octagon.png",
+    "dateCreated": "2026-04-09T18:03:00-04:00",
+    "dateModified": "2026-06-26T14:48:03-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/spin_octagon.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/spin_octagon.html",
+    "title": "Michelson Speed of Light Experiment",
+    "description": "Set the spin rate of the Michelson octagonal mirror in revolutions per second and watch the reflected light beam align or miss the observer. Connects mirror angular speed to the transit time of light over 35 km.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_spin_octagon.png",
+    "dateCreated": "2026-04-09T18:03:00-04:00",
+    "dateModified": "2026-06-26T14:48:03-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/foucault.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/foucault.html",
+    "title": "Foucault Speed of Light Experiment (1850)",
+    "description": "Simulate Foucault's 1850 rotating-mirror experiment; adjust rotation or spin rate to steer the return beam onto the observer. Shows how a small angular deflection encodes the round-trip travel time of light.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_foucault.png",
+    "dateCreated": "2026-04-10T15:31:24-04:00",
+    "dateModified": "2026-06-26T15:12:58-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/sound-meter.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/sound-meter.html",
+    "title": "Sound Pressure Meter",
+    "description": "A sound pressure meter visualization with a draggable microphone that reads off the pressure level at different distances from a source. Illustrates how sound pressure decreases with distance.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_sound-meter.png",
+    "dateCreated": "2026-04-13T14:35:36-07:00",
+    "dateModified": "2026-06-27T01:49:31-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/MarioRotate.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/MarioRotate.html",
+    "title": "Mario Mirror Rotation",
+    "description": "Rotate a familiar sprite image at adjustable speed to explore how a reflected image in a rotating mirror changes. Used to build intuition for image rotation in the Michelson experiment.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_MarioRotate.png",
+    "dateCreated": "2026-04-14T08:58:42-04:00",
+    "dateModified": "2026-06-26T15:07:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/anechoicwedge.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/anechoicwedge.html",
+    "title": "Anechoic Wedge Ray Reflection",
+    "description": "Drag a sound source and aim point to fire rays into a row of anechoic foam wedges and count reflections. Shows how wedge-shaped absorbers trap sound through multiple bounces, explaining why anechoic chambers are nearly silent.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_anechoicwedge.png",
+    "dateCreated": "2026-04-20T22:41:04-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/slide_whistle.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/slide_whistle.html",
+    "title": "Slide Whistle",
+    "description": "Drag the plug of an animated slide whistle to change the air column length and watch the frequency and standing-wave diagram update. Connects pipe length to pitch via the quarter-wave resonance formula.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_slide_whistle.png",
+    "dateCreated": "2026-04-21T10:08:45-07:00",
+    "dateModified": "2026-06-25T14:28:40-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/lower_camera.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/lower_camera.html",
+    "title": "Coffee Cup and Camera",
+    "description": "Drag a camera up and down alongside a coffee cup containing a coin; light rays show what the camera can or cannot see. Explores how viewing angle determines whether a submerged object is visible.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_lower_camera.png",
+    "dateCreated": "2026-04-22T10:03:29-04:00",
+    "dateModified": "2026-06-26T09:58:24-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/camera_water.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/camera_water.html",
+    "title": "Coffee Cup and Camera",
+    "description": "Draw refracted rays from a coin in a water-filled cup to a camera at different heights. Demonstrates apparent-depth refraction and why a coin looks shallower when viewed through water.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_camera_water.png",
+    "dateCreated": "2026-04-22T10:03:29-04:00",
+    "dateModified": "2026-06-26T14:37:23-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/static_setup.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/static_setup.html",
+    "title": "Michelson Experiment - Setup Diagram",
+    "description": "Static diagram of Michelson's 1926 light-speed apparatus, showing the octagonal mirror, distant reflector, and observer positions. Provides a reference layout for understanding the geometry before running the interactive experiment.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_static_setup.png",
+    "dateCreated": "2026-04-22T13:40:49-04:00",
+    "dateModified": "2026-06-26T10:02:31-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/static_setup_rotated.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/static_setup_rotated.html",
+    "title": "Michelson Experiment - Rotated 1&deg;",
+    "description": "Static diagram of the Michelson apparatus with the octagonal mirror rotated 1 degree, showing that the return beam misses the observer. Illustrates the angular sensitivity that makes the experiment work.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_static_setup_rotated.png",
+    "dateCreated": "2026-04-22T13:40:49-04:00",
+    "dateModified": "2026-06-26T10:02:32-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/standing_waves_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/standing_waves_sim.html",
+    "title": "Standing Waves on a String",
+    "description": "Slide a frequency control to drive a string and watch standing waves appear when the driver hits a resonant frequency. Shows how harmonics arise and how string amplitude spikes sharply at integer multiples of the fundamental.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_standing_waves_sim.png",
+    "dateCreated": "2026-04-23T13:21:44-07:00",
+    "dateModified": "2026-06-26T23:45:00-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/spin_octagon_distance.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/spin_octagon_distance.html",
+    "title": "Michelson Speed of Light Experiment",
+    "description": "Interactive Michelson apparatus showing the full light path; spin the octagonal mirror and read off the computed speed of light. Includes a measurement readout so students can derive c from timing data.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_spin_octagon_distance.png",
+    "dateCreated": "2026-04-09T18:03:00-04:00",
+    "dateModified": "2026-06-26T14:48:03-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/c_bugle_standing_waves.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/c_bugle_standing_waves.html",
+    "title": "Standing Waves in a C Bugle",
+    "description": "Select harmonics on a bugle-shaped open tube and see the standing wave pattern, frequency, and wavelength update. Connects instrument geometry to the harmonic series through the formula for open-ended pipe resonance.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_c_bugle_standing_waves.png",
+    "dateCreated": "2026-04-24T11:19:21-07:00",
+    "dateModified": "2026-06-26T23:45:00-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/wave-beating-adjustable-v2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/wave-beating-adjustable-v2.html",
+    "title": "Wave Beating — Adjustable",
+    "description": "Adjust the frequencies of two waves independently and observe their superposition beating at a rate equal to the frequency difference. Lets students discover the beat-frequency formula by experiment.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_wave-beating-adjustable-v2.png",
+    "dateCreated": "2026-04-27T11:58:33-07:00",
+    "dateModified": "2026-06-26T23:21:16-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/wave-beating-on-off-v2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/wave-beating-on-off-v2.html",
+    "title": "Wave Beating Simulation",
+    "description": "Toggle each of two slightly different-frequency waves on and off while watching the combined waveform. Makes the origin of beats audible and visual by switching individual components.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_wave-beating-on-off-v2.png",
+    "dateCreated": "2025-09-29T10:09:08-07:00",
+    "dateModified": "2026-06-26T23:21:16-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/two_speaker_1d.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/two_speaker_1d.html",
+    "title": "Two-Speaker 1D Interference",
+    "description": "Drag two speakers along a line and watch the superposition of their 1D waves; a bar at the right shows whether the listener hears constructive or destructive interference.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_two_speaker_1d.png",
+    "dateCreated": "2026-04-28T11:15:05-07:00",
+    "dateModified": "2026-06-26T10:16:47-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/two_speaker_2d_interference.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/two_speaker_2d_interference.html",
+    "title": "Two-Speaker Interference",
+    "description": "Two speakers emit circular waves whose 2D interference pattern fills the screen; adjust frequency and toggle individual sources. Shows constructive and destructive fringes in the classic two-source pattern.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_two_speaker_2d_interference.png",
+    "dateCreated": "2026-04-28T11:16:07-07:00",
+    "dateModified": "2026-06-25T14:49:27-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/refraction_book.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/refraction_book.html",
+    "title": "Refraction: Book, Water Container, Camera",
+    "description": "Adjust sliders for angle of incidence and refractive index to see a ray bend at a glass-water interface, with live angle and speed data. A quantitative refraction explorer demonstrating Snell's law.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_refraction_book.png",
+    "dateCreated": "2026-04-29T15:26:51-04:00",
+    "dateModified": "2026-06-26T14:55:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/mirror_shortest.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/mirror_shortest.html",
+    "title": "Mirror Shortest Path",
+    "description": "Drag a light source, observer, and reflection point along a mirror to see total path length change. Demonstrates Fermat's principle of least time for mirrors.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_mirror_shortest.png",
+    "dateCreated": "2026-05-04T13:47:27-04:00",
+    "dateModified": "2026-06-26T09:58:24-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/slide_word.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/slide_word.html",
+    "title": "Slide Word",
+    "description": "Type a word and choose a symmetry operation (flip, rotate, reflect) to see how letter shapes transform. A visual tool for exploring how mirror reflections and rotations treat written text differently.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_slide_word.png",
+    "dateCreated": "2026-05-05T10:50:58-04:00",
+    "dateModified": "2026-06-27T03:15:37-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/refraction_book_gif.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/refraction_book_gif.html",
+    "title": "Refraction GIF Generator",
+    "description": "A still reference diagram of the refraction setup showing rays bending at an air-water interface. Provides a GIF-compatible image of the book-in-water refraction demonstration.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_refraction_book_gif.png",
+    "dateCreated": "2026-04-29T15:26:51-04:00",
+    "dateModified": "2026-06-26T14:55:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/binary-orbits.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/binary-orbits.html",
+    "title": "Binary Orbits",
+    "description": "Two stars orbit their common center of mass while emitting sound; Doppler-shifted crests mark the approaching and receding phases. Connects binary star orbital motion to the periodic frequency shifts used to detect them.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_binary-orbits.png",
+    "dateCreated": "2026-05-05T11:11:51-07:00",
+    "dateModified": "2026-06-27T01:26:31-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/fibers.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/fibers.html",
+    "title": "Fiber Refraction",
+    "description": "Set the glass index of refraction and watch rays undergo total internal reflection inside each fiber bundle. Shows the principle behind optical fiber light transmission.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_fibers.png",
+    "dateCreated": "2026-05-05T22:13:10-04:00",
+    "dateModified": "2026-06-26T15:07:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/pool_head.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/pool_head.html",
+    "title": "Refraction at Water-Air Interface",
+    "description": "Drag a point in water and an eye in air; a refracted ray traces Snell's law between them showing where the apparent image appears. Demonstrates apparent depth and the effect of oblique refraction.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_pool_head.png",
+    "dateCreated": "2026-05-07T13:02:21-04:00",
+    "dateModified": "2026-06-26T12:51:49-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_effect_lock.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_effect_lock.html",
+    "title": "Doppler Effect – Flyby (Locked)",
+    "description": "A locked-speed Doppler flyby: watch a source fly past at a fixed speed and count wavefronts to compare approach and recession frequencies. Designed for structured data collection.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_effect_lock.png",
+    "dateCreated": "2026-05-07T11:01:13-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_effect_lock_2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_effect_lock_2.html",
+    "title": "Doppler Effect – Moving Observer (Locked)",
+    "description": "Locked-speed Doppler simulation for a moving observer; the source is stationary while the observer moves at a fixed speed. Isolates the observer-motion Doppler formula for structured comparison.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_effect_lock_2.png",
+    "dateCreated": "2026-05-07T11:01:13-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_both_moving.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_both_moving.html",
+    "title": "Doppler Effect – Both Moving",
+    "description": "Set independent sliders for both source and observer speeds and direction, then watch the resulting Doppler-shifted wavefronts. Explores the combined Doppler formula when neither source nor observer is stationary.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_both_moving.png",
+    "dateCreated": "2026-05-08T10:01:06-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/minimum_deviation.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/minimum_deviation.html",
+    "title": "Prism — Minimum Deviation",
+    "description": "Adjust apex angle, refractive index, and incidence angle of a prism to trace a refracted ray and find minimum deviation. Demonstrates why minimum deviation yields the most accurate index measurement.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_minimum_deviation.png",
+    "dateCreated": "2026-05-15T09:45:46-04:00",
+    "dateModified": "2026-06-26T15:07:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/refraction_game.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/refraction_game.html",
+    "title": "Refraction Game",
+    "description": "A light ray hits a glass interface — click which of two candidate refracted rays is correct. A streak game that drills the rule 'denser material, closer to normal' through rapid randomized problems.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_refraction_game.png",
+    "dateCreated": "2026-05-18T13:42:39-04:00",
+    "dateModified": "2026-06-26T10:02:34-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/ocean-dispersion.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/ocean-dispersion.html",
+    "title": "Ocean Wave Dispersion",
+    "description": "Trigger a storm and watch wave packets of different wavelengths travel at different speeds, separating over time into a swell. Demonstrates ocean wave dispersion, where longer waves outrun shorter ones.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_ocean-dispersion.png",
+    "dateCreated": "2026-05-18T12:21:34-07:00",
+    "dateModified": "2026-06-27T01:26:31-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/wave_speed_comparison.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/wave_speed_comparison.html",
+    "title": "Wave Speed Comparison",
+    "description": "A hammer strikes a grid of particles and two wave pulses travel at different speeds — one compressional (P) and one transverse (S). Shows side-by-side why P-waves arrive before S-waves in seismology.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_wave_speed_comparison.png",
+    "dateCreated": "2026-05-25T22:56:16-04:00",
+    "dateModified": "2026-06-26T10:16:48-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/trilateration_1.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/trilateration_1.html",
+    "title": "Globe Trilateration",
+    "description": "Draw distance circles on a globe from three seismic stations to locate an earthquake epicenter. Introduces trilateration as the technique GPS and seismometers use to find a source from arrival-time data.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_trilateration_1.png",
+    "dateCreated": "2026-05-26T14:53:17-04:00",
+    "dateModified": "2026-06-27T01:55:32-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/s_wave_shadow_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/s_wave_shadow_sim.html",
+    "title": "S-Wave Shadow Zone",
+    "description": "Adjust the Earth's core radius and watch S-wave paths refract or terminate at the liquid core boundary, shading the shadow zone. Explains why S-waves cannot pass through Earth's liquid outer core.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_s_wave_shadow_sim.png",
+    "dateCreated": "2026-05-28T15:10:11-04:00",
+    "dateModified": "2026-06-25T15:31:32-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/p_wave_shadow_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/p_wave_shadow_sim.html",
+    "title": "P-Wave Shadow Zone",
+    "description": "Slide the inner solid core radius to see how P-waves refract through the outer and inner cores. Reveals Earth's internal layered structure from seismic wave paths.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_p_wave_shadow_sim.png",
+    "dateCreated": "2026-05-29T01:49:56-04:00",
+    "dateModified": "2026-06-25T15:33:53-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/trilateration_2.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/trilateration_2.html",
+    "title": "Globe Trilateration",
+    "description": "A more detailed globe trilateration puzzle with labeled seismic stations and location markers. Extends the first trilateration activity with additional real-world station data.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_trilateration_2.png",
+    "dateCreated": "2026-05-26T14:53:17-04:00",
+    "dateModified": "2026-06-27T01:55:32-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/seafloor_refraction_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/seafloor_refraction_sim.html",
+    "title": "Seafloor Sound Refraction",
+    "description": "Adjust wavelength, incidence angle, and seafloor sound speed to watch waves refract at the water-sediment boundary. Demonstrates how sonar waves bend when sound travels faster in the seafloor than in water.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_seafloor_refraction_sim.png",
+    "dateCreated": "2026-06-04T17:33:49-04:00",
+    "dateModified": "2026-06-26T23:51:03-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/refraction_apparent_depth.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/refraction_apparent_depth.html",
+    "title": "Refraction: Apparent Depth",
+    "description": "Drag two eyes above a water surface and trace refracted rays from a dot on the bottom; the intersection shows where the dot appears. Explores how viewing angle changes the perceived position of a submerged object.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_refraction_apparent_depth.png",
+    "dateCreated": "2026-06-05T11:45:23-04:00",
+    "dateModified": "2026-06-26T10:02:34-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/sound_refraction_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/sound_refraction_sim.html",
+    "title": "Sound Refraction Simulation",
+    "description": "Slide a temperature gradient control and watch sound rays curve upward or downward correspondingly. Illustrates atmospheric refraction of sound and why temperature inversions cause sound to travel farther.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_sound_refraction_sim.png",
+    "dateCreated": "2026-06-05T12:55:57-04:00",
+    "dateModified": "2026-06-26T23:51:03-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/doppler_effect_speed_percent.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/doppler_effect_speed_percent.html",
+    "title": "Doppler Effect – Speed %",
+    "description": "A moving sound source with speed expressed as a percentage of the speed of sound; adjust the slider and watch wavefront spacing change. Connects source-speed fraction to the Doppler frequency ratio.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_doppler_effect_speed_percent.png",
+    "dateCreated": "2026-05-07T11:01:13-07:00",
+    "dateModified": "2026-06-26T16:14:02-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/huygens.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/huygens.html",
+    "title": "Huygens' Principle",
+    "description": "Draw a wavefront on a canvas, then animate Huygens' construction to watch each point emit a secondary wavelet and the next wavefront emerge. Directly visualizes Huygens' principle of wave propagation.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_huygens.png",
+    "dateCreated": "2026-06-12T14:55:14-04:00",
+    "dateModified": "2026-06-26T14:05:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/huygens_water.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/huygens_water.html",
+    "title": "Huygens' Principle — Air/Water",
+    "description": "Draw a wavefront that crosses an air-water boundary, then animate Huygens' construction to see wavelets shrink on the water side and the wavefront bend. Explains refraction at an interface through Huygens' principle.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_huygens_water.png",
+    "dateCreated": "2026-06-12T14:55:14-04:00",
+    "dateModified": "2026-06-26T14:05:55-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Sound/pipe_end_correction.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/pipe_end_correction.html",
+    "title": "Pipe End Correction",
+    "description": "Explore how the effective acoustic length of a pipe exceeds its physical length due to end correction, which depends on the pipe's radius.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_pipe_end_correction.png",
+    "dateCreated": "2026-06-18T18:17:51-04:00",
+    "dateModified": "2026-06-27T01:26:31-04:00"
+  },
+  {
+    "url": "539_Middle_School_Physics_1/Light/building_mirror_car.html",
+    "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/building_mirror_car.html",
+    "title": "Sun Reflection off Glass Skyscraper",
+    "description": "Vary the sun angle and building curve to see how concentrated sunlight can reflect from glass skyscrapers. Explore the relationship between surface geometry and reflected light patterns.",
+    "courseId": "539",
+    "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_building_mirror_car.png",
+    "dateCreated": "2026-06-24T14:59:17-04:00",
+    "dateModified": "2026-06-26T09:48:47-04:00"
+  },
+  {
+    "url": "541_Academy_Summer_STEM_3_4/density_sim.html",
+    "pagesUrl": "https://aops-curriculum.github.io/541_Academy_Summer_STEM_3_4/density_sim.html",
+    "title": "Float or Sink? — Density &amp; Buoyancy",
+    "description": "Drop objects of different mass and volume into a liquid tank and observe whether they float or sink based on their density relative to the fluid. Introduces the concept of density and buoyancy through direct experimentation.",
+    "courseId": "541",
+    "screenshotUrl": "screenshots/541_Academy_Summer_STEM_3_4_density_sim.png",
+    "dateCreated": "2026-06-18T13:53:43-04:00",
+    "dateModified": "2026-06-27T02:54:21-04:00"
+  },
+  {
+    "url": "544_Middle_School_Science_Contests/mirror_optics.html",
+    "pagesUrl": "https://aops-curriculum.github.io/544_Middle_School_Science_Contests/mirror_optics.html",
+    "title": "Mirror Optics",
+    "description": "Place an object in front of a concave or convex mirror, drag rays, and observe where the image forms and whether it is real or virtual. A flexible ray-tracing tool for geometric mirror optics.",
+    "courseId": "544",
+    "screenshotUrl": "screenshots/544_Middle_School_Science_Contests_mirror_optics.png",
+    "dateCreated": "2026-06-14T11:11:54-04:00",
+    "dateModified": "2026-06-27T02:54:29-04:00"
+  },
+  {
+    "url": "544_Middle_School_Science_Contests/04_Celestial_Bodies_Solar_System/Wanderers/index.html",
+    "pagesUrl": "https://aops-curriculum.github.io/544_Middle_School_Science_Contests/04_Celestial_Bodies_Solar_System/Wanderers/index.html",
+    "title": "Wanderers Slideshow",
+    "description": "A slideshow of images of the planets and other solar-system wanderers. Provides a visual tour of celestial bodies for an introductory astronomy unit.",
+    "courseId": "544",
+    "screenshotUrl": "screenshots/544_Middle_School_Science_Contests_04_Celestial_Bodies_Solar_System_Wanderers_index.png",
+    "dateCreated": "2025-07-01T15:23:25-07:00",
+    "dateModified": "2025-07-01T16:33:38-07:00"
+  }
+];
+const COURSE_COLORS = {"175":{"badge":"#7c3aed","light":"#ede9fe","gradient":"linear-gradient(135deg,#ede9fe,#7c3aed)"},"190":{"badge":"#c2410c","light":"#ffedd5","gradient":"linear-gradient(135deg,#ffedd5,#c2410c)"},"268":{"badge":"#0369a1","light":"#e0f2fe","gradient":"linear-gradient(135deg,#e0f2fe,#0369a1)"},"303":{"badge":"#065f46","light":"#d1fae5","gradient":"linear-gradient(135deg,#d1fae5,#065f46)"},"405":{"badge":"#92400e","light":"#fef3c7","gradient":"linear-gradient(135deg,#fef3c7,#b45309)"},"413":{"badge":"#be185d","light":"#fce7f3","gradient":"linear-gradient(135deg,#fce7f3,#be185d)"},"443":{"badge":"#1e40af","light":"#dbeafe","gradient":"linear-gradient(135deg,#dbeafe,#1e40af)"},"539":{"badge":"#047857","light":"#d1fae5","gradient":"linear-gradient(135deg,#d1fae5,#047857)"},"541":{"badge":"#b45309","light":"#fffbeb","gradient":"linear-gradient(135deg,#fffbeb,#d97706)"},"544":{"badge":"#6b21a8","light":"#f3e8ff","gradient":"linear-gradient(135deg,#f3e8ff,#6b21a8)"}};
+const COURSE_EMOJI = {"175":"⚡","190":"🎯","268":"🔬","303":"📐","405":"🚀","413":"🌊","443":"🌿","539":"💡","541":"🧪","544":"🏆"};
+
+// Build course lookup
+const courseById = {};
+for (const c of COURSES) courseById[c.id] = c;
+
+// ── State ──
+let searchQuery = '';
+let enabledCourses = new Set(COURSES.map(c => c.id));
+let sortMode = 'nameAZ';
+let groupByCourse = false;
+let searchTimer = null;
+
+// ── Build checkbox list ──
+const checkboxesDiv = document.getElementById('courseCheckboxes');
+for (const c of COURSES) {
+  const label = document.createElement('label');
+  label.className = 'dropdown-item';
+  label.innerHTML = `<input type="checkbox" checked data-course="${c.id}"> ${c.id} – ${escHtml(c.name)}`;
+  checkboxesDiv.appendChild(label);
+  label.querySelector('input').addEventListener('change', () => { updateCourseState(); render(); });
+}
+
+document.getElementById('allOnBtn').addEventListener('click', () => {
+  checkboxesDiv.querySelectorAll('input').forEach(cb => cb.checked = true);
+  updateCourseState(); render();
+});
+document.getElementById('allOffBtn').addEventListener('click', () => {
+  checkboxesDiv.querySelectorAll('input').forEach(cb => cb.checked = false);
+  updateCourseState(); render();
+});
+
+function updateCourseState() {
+  enabledCourses = new Set();
+  checkboxesDiv.querySelectorAll('input').forEach(cb => {
+    if (cb.checked) enabledCourses.add(cb.dataset.course);
+  });
+  const n = enabledCourses.size;
+  document.getElementById('courseDropBtn').textContent = `Courses (${n}/${COURSES.length})`;
+}
+
+// Dropdown toggle
+const dropBtn = document.getElementById('courseDropBtn');
+const dropPanel = document.getElementById('courseDropPanel');
+dropBtn.addEventListener('click', e => { e.stopPropagation(); dropPanel.classList.toggle('open'); });
+document.addEventListener('click', () => dropPanel.classList.remove('open'));
+dropPanel.addEventListener('click', e => e.stopPropagation());
+
+// Search with debounce
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { searchQuery = e.target.value.toLowerCase(); render(); }, 300);
+});
+
+// Sort
+document.getElementById('sortSelect').addEventListener('change', e => { sortMode = e.target.value; render(); });
+
+// Copy GitHub Pages URL (delegated; don't follow the card link)
+document.getElementById('content').addEventListener('click', e => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const url = btn.dataset.url || '';
+  const done = () => {
+    const old = btn.textContent;
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = old; btn.classList.remove('copied'); }, 1100);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done).catch(() => {
+      window.prompt('Copy this GitHub Pages URL:', url);
+    });
+  } else {
+    window.prompt('Copy this GitHub Pages URL:', url);
+  }
+});
+
+// Group
+document.getElementById('groupCheck').addEventListener('change', e => { groupByCourse = e.target.checked; render(); });
+
+// ── Helpers ──
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch(_) { return '—'; }
+}
+
+let currentScoreMap = null; // Map<sim, hitCount> set by getFiltered() for multi-term searches
+
+function sortSims(arr) {
+  return [...arr].sort((a, b) => {
+    if (currentScoreMap) {
+      const diff = (currentScoreMap.get(b) || 0) - (currentScoreMap.get(a) || 0);
+      if (diff !== 0) return diff;
+    }
+    switch (sortMode) {
+      case 'nameAZ': return a.title.localeCompare(b.title);
+      case 'nameZA': return b.title.localeCompare(a.title);
+      case 'createdOld': return (a.dateCreated || '').localeCompare(b.dateCreated || '');
+      case 'createdNew': return (b.dateCreated || '').localeCompare(a.dateCreated || '');
+      case 'editedOld': return (a.dateModified || '').localeCompare(b.dateModified || '');
+      case 'editedNew': return (b.dateModified || '').localeCompare(a.dateModified || '');
+      default: return 0;
+    }
+  });
+}
+
+function makeCard(sim) {
+  const colors = COURSE_COLORS[sim.courseId] || { badge:'#666', light:'#eee', gradient:'linear-gradient(135deg,#eee,#999)' };
+  const emoji = COURSE_EMOJI[sim.courseId] || '📄';
+  const course = courseById[sim.courseId];
+  const courseName = course ? `${course.id} – ${course.name}` : sim.courseId;
+  // Cards link to the LIVE GitHub Pages URL of the sim (cross-repo, absolute).
+  const link = sim.pagesUrl || sim.url;
+
+  const preview = sim.screenshotUrl
+    ? `<img src="${escHtml(sim.screenshotUrl)}" alt="${escHtml(sim.title)}" loading="lazy">`
+    : `<span>${emoji}</span>`;
+  const previewStyle = sim.screenshotUrl ? '' : `style="background:${colors.gradient}"`;
+
+  const desc = sim.description ? `<div class="card-desc">${escHtml(sim.description)}</div>` : '';
+  const created = fmtDate(sim.dateCreated);
+  const edited = fmtDate(sim.dateModified);
+  const datesHtml = (created !== '—' || edited !== '—')
+    ? `<div class="card-dates">Created: ${created} · Edited: ${edited}</div>`
+    : '';
+
+  return `<a href="${escHtml(link)}" class="sim-card" target="_blank" rel="noopener">
+  <button class="copy-btn" type="button" title="Copy GitHub Pages URL" data-url="${escHtml(link)}">⧉</button>
+  <div class="card-preview" ${previewStyle}>${preview}</div>
+  <div class="card-body">
+    <div class="card-title">${escHtml(sim.title)}</div>
+    <div><span class="course-badge" style="background:${colors.badge}">${escHtml(courseName)}</span></div>
+    ${desc}
+    ${datesHtml}
+    <div class="card-url" title="${escHtml(link)}">${escHtml(link)}</div>
+  </div>
+</a>`;
+}
+
+// ── Render ──
+// Returns last path segment of a URL, normalized for searching
+// e.g. "175_PhysicsWOOT_1/under_pressure.html" → "under pressure"
+function simSlug(s) {
+  const parts = s.url.split('/');
+  return (parts[parts.length - 1] || '').replace(/.html$/i, '').replace(/[-_]/g, ' ');
+}
+
+function getFiltered() {
+  const raw = searchQuery.trim();
+  const terms = raw ? raw.split(/s+/).filter(Boolean) : [];
+  const isMultiTerm = terms.length > 1;
+  currentScoreMap = isMultiTerm ? new Map() : null;
+
+  const result = [];
+  for (const s of SIMULATIONS) {
+    if (!enabledCourses.has(s.courseId)) continue;
+    if (terms.length === 0) {
+      result.push(s);
+    } else {
+      const hay = (s.title + ' ' + s.description + ' ' + simSlug(s)).toLowerCase();
+      let hits = 0;
+      for (const t of terms) if (hay.includes(t)) hits++;
+      if (hits > 0) {
+        result.push(s);
+        if (isMultiTerm) currentScoreMap.set(s, hits);
+      }
+    }
+  }
+  return result;
+}
+
+function render() {
+  const filtered = getFiltered();
+  const total = SIMULATIONS.length;
+  document.getElementById('resultsInfo').textContent = `Showing ${filtered.length} of ${total} simulations`;
+
+  const content = document.getElementById('content');
+
+  if (filtered.length === 0) {
+    content.innerHTML = '<div class="no-results">No simulations match your filters.</div>';
+    return;
+  }
+
+  if (!groupByCourse) {
+    const sorted = sortSims(filtered);
+    content.innerHTML = `<div class="sim-grid">${sorted.map(makeCard).join('')}</div>`;
+  } else {
+    let html = '';
+    for (const course of COURSES) {
+      if (!enabledCourses.has(course.id)) continue;
+      const courseSims = sortSims(filtered.filter(s => s.courseId === course.id));
+      if (courseSims.length === 0) continue;
+      html += `<div class="group-header">${escHtml(course.name)} (${courseSims.length})</div>`;
+      html += `<div class="sim-grid">${courseSims.map(makeCard).join('')}</div>`;
+    }
+    content.innerHTML = html;
+  }
+}
+
+render();
+</script>
+</body>
+</html>
