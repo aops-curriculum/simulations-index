@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-27T09:46:28.041Z",
+  "generatedAt": "2026-06-29T19:51:58.207Z",
   "courses": [
     {
       "id": "175",
@@ -1472,6 +1472,16 @@
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_building_mirror_car.png",
       "dateCreated": "2026-06-24T14:59:17-04:00",
       "dateModified": "2026-06-26T09:48:47-04:00"
+    },
+    {
+      "url": "539_Middle_School_Physics_1/Sound/wave_speed_fit.html",
+      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Sound/wave_speed_fit.html",
+      "title": "Wave Speed Fit",
+      "description": "Fit a power-law model to experimental wave speed data by adjusting coefficient and exponent sliders, discovering the quantitative relationship between wave speed and physical properties like tension or medium density.",
+      "courseId": "539",
+      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_wave_speed_fit.png",
+      "dateCreated": "2026-06-27T19:30:19-04:00",
+      "dateModified": "2026-06-27T19:30:19-04:00"
     },
     {
       "url": "541_Academy_Summer_STEM_3_4/density_sim.html",
