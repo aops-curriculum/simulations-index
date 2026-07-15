@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T14:25:03.077Z",
+  "generatedAt": "2026-07-15T15:31:41.594Z",
   "courses": [
     {
       "id": "175",
@@ -61,7 +61,7 @@
       "courseId": "175",
       "screenshotUrl": "screenshots/175_PhysicsWOOT_1_charges_and_fields.png",
       "dateCreated": "2026-06-18T13:48:38-04:00",
-      "dateModified": "2026-06-26T10:17:05-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "175_PhysicsWOOT_1/magnet_coil.html",
@@ -71,7 +71,7 @@
       "courseId": "175",
       "screenshotUrl": "screenshots/175_PhysicsWOOT_1_magnet_coil.png",
       "dateCreated": "2026-06-18T13:48:38-04:00",
-      "dateModified": "2026-06-26T11:36:33-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "175_PhysicsWOOT_1/photoelectric.html",
@@ -81,7 +81,7 @@
       "courseId": "175",
       "screenshotUrl": "screenshots/175_PhysicsWOOT_1_photoelectric.png",
       "dateCreated": "2026-06-18T13:48:38-04:00",
-      "dateModified": "2026-06-27T02:44:56-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "175_PhysicsWOOT_1/wave_on_string.html",
@@ -91,7 +91,7 @@
       "courseId": "175",
       "screenshotUrl": "screenshots/175_PhysicsWOOT_1_wave_on_string.png",
       "dateCreated": "2026-06-18T13:48:38-04:00",
-      "dateModified": "2026-06-27T02:44:56-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "190_FMA_Problem_Series/rotatingring.html",
@@ -131,7 +131,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_balance_lab.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-26T10:24:03-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/circuit_lab.html",
@@ -141,7 +141,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_circuit_lab.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-25T21:18:45-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/hookes_law.html",
@@ -151,7 +151,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_hookes_law.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-26T10:18:02-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/newton_cannon.html",
@@ -161,7 +161,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_newton_cannon.png",
       "dateCreated": "2026-06-24T16:43:24-04:00",
-      "dateModified": "2026-06-25T20:23:23-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/pendulum_lab.html",
@@ -171,7 +171,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_pendulum_lab.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-27T02:39:13-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/spring_stretch.html",
@@ -181,7 +181,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_spring_stretch.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-25T14:37:32-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/spring_stretch_zoom.html",
@@ -191,7 +191,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_spring_stretch_zoom.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-27T02:39:13-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/stretchrod.html",
@@ -211,7 +211,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_TASEP.png",
       "dateCreated": "2026-06-18T23:40:29-04:00",
-      "dateModified": "2026-06-27T02:39:13-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/traffic.html",
@@ -221,7 +221,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_traffic.png",
       "dateCreated": "2026-06-18T23:40:29-04:00",
-      "dateModified": "2026-06-27T02:39:13-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/trafficrunningspeed.html",
@@ -231,7 +231,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_trafficrunningspeed.png",
       "dateCreated": "2026-06-18T23:40:29-04:00",
-      "dateModified": "2026-06-27T02:39:13-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/trafficspeed.html",
@@ -251,7 +251,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_traffic_model.png",
       "dateCreated": "2026-06-24T16:29:34-04:00",
-      "dateModified": "2026-06-25T15:09:12-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/under_pressure.html",
@@ -261,7 +261,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_under_pressure.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-26T10:18:03-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/measure_spring/index.html",
@@ -281,7 +281,7 @@
       "courseId": "303",
       "screenshotUrl": "screenshots/303_Academy_Intro_Mechanics_vector_addition.png",
       "dateCreated": "2026-06-18T13:53:13-04:00",
-      "dateModified": "2026-06-26T10:17:31-04:00"
+      "dateModified": "2026-07-15T11:28:29-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/collision_1d.html",
@@ -291,7 +291,7 @@
       "courseId": "405",
       "screenshotUrl": "screenshots/405_Physics_1_Mechanics_collision_1d.png",
       "dateCreated": "2026-06-18T13:48:32-04:00",
-      "dateModified": "2026-06-27T02:22:21-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/energy_skate_park.html",
@@ -301,7 +301,7 @@
       "courseId": "405",
       "screenshotUrl": "screenshots/405_Physics_1_Mechanics_energy_skate_park.png",
       "dateCreated": "2026-06-18T13:48:32-04:00",
-      "dateModified": "2026-06-25T14:36:47-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/gas_box.html",
@@ -311,7 +311,7 @@
       "courseId": "405",
       "screenshotUrl": "screenshots/405_Physics_1_Mechanics_gas_box.png",
       "dateCreated": "2026-06-18T13:48:32-04:00",
-      "dateModified": "2026-06-27T02:22:21-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/lc_circuit.html",
@@ -321,7 +321,7 @@
       "courseId": "405",
       "screenshotUrl": "screenshots/405_Physics_1_Mechanics_lc_circuit.png",
       "dateCreated": "2026-06-18T13:48:32-04:00",
-      "dateModified": "2026-06-27T02:22:21-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/measure.html",
@@ -331,7 +331,7 @@
       "courseId": "405",
       "screenshotUrl": "screenshots/405_Physics_1_Mechanics_measure.png",
       "dateCreated": "2026-06-18T13:48:32-04:00",
-      "dateModified": "2026-06-27T02:22:21-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/orbits.html",
@@ -341,7 +341,7 @@
       "courseId": "405",
       "screenshotUrl": "screenshots/405_Physics_1_Mechanics_orbits.png",
       "dateCreated": "2026-06-18T13:48:32-04:00",
-      "dateModified": "2026-06-27T02:22:21-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "405_Physics_1_Mechanics/stickcylinder.html",
@@ -361,7 +361,7 @@
       "courseId": "413",
       "screenshotUrl": "screenshots/413_Academy_Physics_Waves_harmonics_builder.png",
       "dateCreated": "2026-06-18T13:53:23-04:00",
-      "dateModified": "2026-06-27T02:48:02-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "413_Academy_Physics_Waves/two_source_interference.html",
@@ -371,7 +371,7 @@
       "courseId": "413",
       "screenshotUrl": "screenshots/413_Academy_Physics_Waves_two_source_interference.png",
       "dateCreated": "2026-06-18T13:53:23-04:00",
-      "dateModified": "2026-06-27T02:48:02-04:00"
+      "dateModified": "2026-07-15T11:28:30-04:00"
     },
     {
       "url": "443_Academy_Science_3/forces_basics.html",
@@ -381,7 +381,7 @@
       "courseId": "443",
       "screenshotUrl": "screenshots/443_Academy_Science_3_forces_basics.png",
       "dateCreated": "2026-06-18T13:53:33-04:00",
-      "dateModified": "2026-06-27T02:50:59-04:00"
+      "dateModified": "2026-07-15T11:28:31-04:00"
     },
     {
       "url": "443_Academy_Science_3/natural_selection.html",
@@ -391,7 +391,7 @@
       "courseId": "443",
       "screenshotUrl": "screenshots/443_Academy_Science_3_natural_selection.png",
       "dateCreated": "2026-06-18T13:53:33-04:00",
-      "dateModified": "2026-06-27T02:50:59-04:00"
+      "dateModified": "2026-07-15T11:28:31-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Light/color-mixer.html",
@@ -511,7 +511,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_sun_rays3.png",
       "dateCreated": "2025-07-21T14:22:49-07:00",
-      "dateModified": "2026-06-25T14:37:09-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Light/sun_rays4.html",
@@ -561,7 +561,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_pluck_string-graph-with-timer.png",
       "dateCreated": "2026-01-05T10:35:48-08:00",
-      "dateModified": "2026-06-25T14:37:09-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/pluck_string-graph-with-timer-separated.html",
@@ -671,7 +671,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/random-walk-mode3.png",
       "dateCreated": "2025-09-15T12:46:58-04:00",
-      "dateModified": "2026-06-27T02:04:12-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/two-microphones/index.html",
@@ -701,7 +701,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_DepthPerceptionQuarter5.png",
       "dateCreated": "2026-02-10T13:18:37-05:00",
-      "dateModified": "2026-06-26T09:54:54-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Light/TiltMirror.html",
@@ -761,7 +761,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_noise_cancel_v2.png",
       "dateCreated": "2026-02-11T17:11:12-05:00",
-      "dateModified": "2026-06-26T23:36:41-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/noise_cancel_v3.html",
@@ -911,7 +911,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_little_mirrors.png",
       "dateCreated": "2026-03-20T09:29:20-04:00",
-      "dateModified": "2026-06-26T12:55:06-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Light/cylinder_reflection_eye.html",
@@ -1061,7 +1061,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_foucault.png",
       "dateCreated": "2026-04-10T15:31:24-04:00",
-      "dateModified": "2026-06-26T15:12:58-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/sound-meter.html",
@@ -1131,7 +1131,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_static_setup.png",
       "dateCreated": "2026-04-22T13:40:49-04:00",
-      "dateModified": "2026-06-26T10:02:31-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Light/static_setup_rotated.html",
@@ -1181,7 +1181,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_wave-beating-adjustable-v2.png",
       "dateCreated": "2026-04-27T11:58:33-07:00",
-      "dateModified": "2026-06-26T23:21:16-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/wave-beating-on-off-v2.html",
@@ -1331,7 +1331,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_refraction_game.png",
       "dateCreated": "2026-05-18T13:42:39-04:00",
-      "dateModified": "2026-06-26T10:02:34-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/ocean-dispersion.html",
@@ -1361,7 +1361,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Sound_trilateration_1.png",
       "dateCreated": "2026-05-26T14:53:17-04:00",
-      "dateModified": "2026-06-27T01:55:32-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/s_wave_shadow_sim.html",
@@ -1471,7 +1471,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_building_mirror_car.png",
       "dateCreated": "2026-06-24T14:59:17-04:00",
-      "dateModified": "2026-06-26T09:48:47-04:00"
+      "dateModified": "2026-07-15T11:28:48-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/wave_speed_fit.html",
@@ -1487,11 +1487,11 @@
       "url": "539_Middle_School_Physics_1/Light/thin_film.html",
       "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/thin_film.html",
       "title": "Thin-Film Interference (soap film)",
-      "description": "Adjust a soap film's thickness and observe colorful interference patterns shift. Explore how wavelength and optical path difference determine whether light constructively or destructively interferes.",
+      "description": "Watch iridescent interference colors form in a soap film as light reflects off opposite surfaces. Discover how film thickness determines whether reflected waves interfere constructively or destructively.",
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_thin_film.png",
       "dateCreated": "2026-07-15T10:00:31-04:00",
-      "dateModified": "2026-07-15T10:17:40-04:00"
+      "dateModified": "2026-07-15T11:22:36-04:00"
     },
     {
       "url": "541_Academy_Summer_STEM_3_4/density_sim.html",
@@ -1501,7 +1501,7 @@
       "courseId": "541",
       "screenshotUrl": "screenshots/541_Academy_Summer_STEM_3_4_density_sim.png",
       "dateCreated": "2026-06-18T13:53:43-04:00",
-      "dateModified": "2026-06-27T02:54:21-04:00"
+      "dateModified": "2026-07-15T11:28:32-04:00"
     },
     {
       "url": "544_Middle_School_Science_Contests/mirror_optics.html",
@@ -1511,7 +1511,7 @@
       "courseId": "544",
       "screenshotUrl": "screenshots/544_Middle_School_Science_Contests_mirror_optics.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-06-27T02:54:29-04:00"
+      "dateModified": "2026-07-15T11:28:32-04:00"
     },
     {
       "url": "544_Middle_School_Science_Contests/04_Celestial_Bodies_Solar_System/Wanderers/index.html",
