@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T03:44:47.515Z",
+  "generatedAt": "2026-08-26T18:44:36.656Z",
   "courses": [
     {
       "id": "175",
@@ -1412,6 +1412,16 @@
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_refraction_apparent_depth.png",
       "dateCreated": "2026-06-05T11:45:23-04:00",
       "dateModified": "2026-06-26T10:02:34-04:00"
+    },
+    {
+      "url": "539_Middle_School_Physics_1/Light/fish_apparent_position.html",
+      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/fish_apparent_position.html",
+      "title": "Where Does the Fish Appear to Be?",
+      "description": "Drag a fish underwater and drag two eyes above the surface; rays refract at the water line and the backward-extended lines of sight show where the fish appears to be. Four presets match the worksheet practice diagrams.",
+      "courseId": "539",
+      "screenshotUrl": null,
+      "dateCreated": "2026-08-26T14:31:55-04:00",
+      "dateModified": "2026-08-26T14:31:55-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Sound/sound_refraction_sim.html",
