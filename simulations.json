@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T18:44:36.656Z",
+  "generatedAt": "2026-08-27T14:49:31.117Z",
   "courses": [
     {
       "id": "175",
@@ -1419,7 +1419,7 @@
       "title": "Where Does the Fish Appear to Be?",
       "description": "Drag a fish underwater and drag two eyes above the surface; rays refract at the water line and the backward-extended lines of sight show where the fish appears to be. Four presets match the worksheet practice diagrams.",
       "courseId": "539",
-      "screenshotUrl": null,
+      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_fish_apparent_position.png",
       "dateCreated": "2026-08-26T14:31:55-04:00",
       "dateModified": "2026-08-26T14:31:55-04:00"
     },
@@ -1512,6 +1512,26 @@
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/chip_collision.png",
       "dateCreated": "2026-08-12T09:09:06-07:00",
       "dateModified": "2026-08-12T09:09:06-07:00"
+    },
+    {
+      "url": "539_Middle_School_Physics_1/chip_collision_2d.html",
+      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/chip_collision_2d.html",
+      "title": "Chip Collision — 2D Elastic",
+      "description": "Explore 2D elastic collisions between red and blue chips, testing how initial speed and vertical offset affect momentum and energy conservation.",
+      "courseId": "539",
+      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/chip_collision_2d.png",
+      "dateCreated": "2026-08-26T15:09:46-07:00",
+      "dateModified": "2026-08-26T15:09:46-07:00"
+    },
+    {
+      "url": "539_Middle_School_Physics_1/Light/snells_law.html",
+      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/snells_law.html",
+      "title": "Snell’s Law Ray Tracer",
+      "description": "Aim a ray at a tiltable interface, set both indices of refraction, and see the refracted and reflected rays, including total internal reflection. Drop in a screenshot to trace over.",
+      "courseId": "539",
+      "screenshotUrl": null,
+      "dateCreated": "2026-08-27T09:54:34-04:00",
+      "dateModified": "2026-08-27T09:54:34-04:00"
     },
     {
       "url": "541_Academy_Summer_STEM_3_4/density_sim.html",
