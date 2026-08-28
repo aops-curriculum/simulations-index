@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27T19:44:43.716Z",
+  "generatedAt": "2026-08-28T07:44:41.653Z",
   "courses": [
     {
       "id": "175",
@@ -1552,6 +1552,16 @@
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_lens_ray_tracer.png",
       "dateCreated": "2026-08-27T13:01:35-04:00",
       "dateModified": "2026-08-27T15:33:09-04:00"
+    },
+    {
+      "url": "539_Middle_School_Physics_1/chess-position-builder.html",
+      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/chess-position-builder.html",
+      "title": "Position Builder &mdash; Asymptote chessboard",
+      "description": "Build any chess position on an interactive board and instantly generate Asymptote code for it. Learn how visual game states translate into formal code representation for mathematical diagrams.",
+      "courseId": "539",
+      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/chess-position-builder.png",
+      "dateCreated": "2026-08-27T15:46:59-07:00",
+      "dateModified": "2026-08-27T15:46:59-07:00"
     },
     {
       "url": "541_Academy_Summer_STEM_3_4/density_sim.html",
