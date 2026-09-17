@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T20:41:53.343Z",
+  "generatedAt": "2026-09-17T22:53:58.846Z",
   "courses": [
     {
       "id": "175",
@@ -1569,36 +1569,6 @@
       "dateModified": "2026-08-27T15:46:59-07:00"
     },
     {
-      "url": "540_Middle_School_Physics_2/add_stick_plastic.html",
-      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/add_stick_plastic.html",
-      "title": "Rubbing Plastics, with a Fun Fly Stick",
-      "description": "Rub two plastics together to charge them through friction, then test them with a negatively charged Fun Fly Stick to determine whether each plastic became positively or negatively charged.",
-      "courseId": "540",
-      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_add_stick_plastic.png",
-      "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-17T16:37:22-04:00"
-    },
-    {
-      "url": "540_Middle_School_Physics_2/electric_induction.html",
-      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/electric_induction.html",
-      "title": "Positive and Negative Charge Inside Everything",
-      "description": "Bring a charged stick near a neutral object to watch its internal red and blue charges separate, demonstrating how electrostatic induction works.",
-      "courseId": "540",
-      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_electric_induction.png",
-      "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-17T16:37:22-04:00"
-    },
-    {
-      "url": "540_Middle_School_Physics_2/flowing_essence.html",
-      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/flowing_essence.html",
-      "title": "The Charge Model",
-      "description": "Turn on a stick to create charge and watch it flow to other objects. Charged objects attract uncharged objects but repel other charged ones.",
-      "courseId": "540",
-      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_flowing_essence.png",
-      "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-17T16:37:22-04:00"
-    },
-    {
       "url": "540_Middle_School_Physics_2/fly_stick.html",
       "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/fly_stick.html",
       "title": "Fun Fly Stick, Flyers and Paper",
@@ -1606,7 +1576,7 @@
       "courseId": "540",
       "screenshotUrl": "screenshots/540_Middle_School_Physics_2_fly_stick.png",
       "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-17T16:37:22-04:00"
+      "dateModified": "2026-09-17T18:53:41-04:00"
     },
     {
       "url": "540_Middle_School_Physics_2/four_balls.html",
@@ -1626,7 +1596,7 @@
       "courseId": "540",
       "screenshotUrl": "screenshots/540_Middle_School_Physics_2_rub_plastics.png",
       "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-17T16:37:22-04:00"
+      "dateModified": "2026-09-17T18:53:41-04:00"
     },
     {
       "url": "540_Middle_School_Physics_2/tape.html",
