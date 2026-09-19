@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T22:53:58.846Z",
+  "generatedAt": "2026-09-19T04:11:24.350Z",
   "courses": [
     {
       "id": "175",
@@ -1589,6 +1589,16 @@
       "dateModified": "2026-09-17T16:37:22-04:00"
     },
     {
+      "url": "540_Middle_School_Physics_2/galileo_ramp_ruler.html",
+      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/galileo_ramp_ruler.html",
+      "title": "Equal times, unequal distances",
+      "description": "Roll a ball down a ramp and measure the distance it travels in each equal time interval. You'll see distances increase—the classic signature of acceleration.",
+      "courseId": "540",
+      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_galileo_ramp_ruler.png",
+      "dateCreated": "2026-09-18T16:06:43-07:00",
+      "dateModified": "2026-09-18T16:06:43-07:00"
+    },
+    {
       "url": "540_Middle_School_Physics_2/rub_plastics.html",
       "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/rub_plastics.html",
       "title": "Rubbing Plastics Together",
@@ -1597,6 +1607,16 @@
       "screenshotUrl": "screenshots/540_Middle_School_Physics_2_rub_plastics.png",
       "dateCreated": "2026-09-10T16:58:07-04:00",
       "dateModified": "2026-09-17T18:53:41-04:00"
+    },
+    {
+      "url": "540_Middle_School_Physics_2/spring_scale.html",
+      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/spring_scale.html",
+      "title": "Spring Scale",
+      "description": "Hang objects on a spring scale and watch how the spring stretches with different weights. See how spring scales measure force through the spring's displacement.",
+      "courseId": "540",
+      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_spring_scale.png",
+      "dateCreated": "2026-09-18T16:06:43-07:00",
+      "dateModified": "2026-09-18T16:06:43-07:00"
     },
     {
       "url": "540_Middle_School_Physics_2/tape.html",
