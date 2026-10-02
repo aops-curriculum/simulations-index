@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-30T04:07:17.019Z",
+  "generatedAt": "2026-10-02T16:38:59.394Z",
   "courses": [
     {
       "id": "175",
@@ -1039,24 +1039,14 @@
       "dateModified": "2026-06-22T15:20:38-04:00"
     },
     {
-      "url": "539_Middle_School_Physics_1/Light/rotate_octagon.html",
-      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/rotate_octagon.html",
+      "url": "539_Middle_School_Physics_1/Light/michelson_octagon.html",
+      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/michelson_octagon.html",
       "title": "Michelson Speed of Light Experiment",
-      "description": "Spin the octagonal mirror in the Michelson apparatus and see whether the return beam hits the observer's eye. Focuses on the discrete-face geometry of the rotating mirror.",
+      "description": "Michelson's rotating octagon mirror, with two modes: turn the octagon by hand to find the narrow range of angles that sends light to the observer (?mode=rotate), or set a spin rate in rev/s and find the speed where the returning light lines up again (?mode=spin). With no mode, a switch picks between them. Replaces rotate_octagon.html and spin_octagon.html.",
       "courseId": "539",
-      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_rotate_octagon.png",
+      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_michelson_octagon.png",
       "dateCreated": "2026-04-09T18:03:00-04:00",
-      "dateModified": "2026-06-26T14:48:03-04:00"
-    },
-    {
-      "url": "539_Middle_School_Physics_1/Light/spin_octagon.html",
-      "pagesUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/Light/spin_octagon.html",
-      "title": "Michelson Speed of Light Experiment",
-      "description": "Set the spin rate of the Michelson octagonal mirror in revolutions per second and watch the reflected light beam align or miss the observer. Connects mirror angular speed to the transit time of light over 35 km.",
-      "courseId": "539",
-      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_spin_octagon.png",
-      "dateCreated": "2026-04-09T18:03:00-04:00",
-      "dateModified": "2026-06-26T14:48:03-04:00"
+      "dateModified": "2026-09-30T20:13:22-04:00"
     },
     {
       "url": "539_Middle_School_Physics_1/Light/foucault.html",
@@ -1574,9 +1564,9 @@
       "title": "Mud and Asphalt: Least Time",
       "description": "Interactive simulation: Mud and Asphalt: Least Time.",
       "courseId": "539",
-      "screenshotUrl": null,
+      "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/Light_least_time_mud.png",
       "dateCreated": "2026-09-29T23:53:03-04:00",
-      "dateModified": "2026-09-29T23:53:03-04:00"
+      "dateModified": "2026-09-30T00:42:50-04:00"
     },
     {
       "url": "540_Middle_School_Physics_2/fly_stick.html",
