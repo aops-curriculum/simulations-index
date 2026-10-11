@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-02T16:38:59.394Z",
+  "generatedAt": "2026-10-11T07:33:25.150Z",
   "courses": [
     {
       "id": "175",
@@ -136,7 +136,7 @@
       "courseId": "268",
       "screenshotUrl": "screenshots/268_Introduction_to_Physics_balance_lab.png",
       "dateCreated": "2026-06-14T11:11:54-04:00",
-      "dateModified": "2026-07-17T02:15:18-04:00"
+      "dateModified": "2026-10-10T20:51:33-04:00"
     },
     {
       "url": "268_Introduction_to_Physics/circuit_lab.html",
