@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T20:34:35.617Z",
+  "generatedAt": "2026-10-15T07:32:52.060Z",
   "courses": [
     {
       "id": "175",
@@ -1576,7 +1576,7 @@
       "courseId": "540",
       "screenshotUrl": "screenshots/540_Middle_School_Physics_2_fly_stick.png",
       "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-22T15:32:38-04:00"
+      "dateModified": "2026-10-14T19:00:03-04:00"
     },
     {
       "url": "540_Middle_School_Physics_2/four_balls.html",
@@ -1636,7 +1636,7 @@
       "courseId": "540",
       "screenshotUrl": "screenshots/540_Middle_School_Physics_2_tape.png",
       "dateCreated": "2026-09-10T16:58:07-04:00",
-      "dateModified": "2026-09-22T15:32:38-04:00"
+      "dateModified": "2026-10-14T19:00:03-04:00"
     },
     {
       "url": "541_Academy_Summer_STEM_3_4/density_sim.html",
