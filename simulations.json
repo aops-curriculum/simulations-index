@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T15:07:58.213Z",
+  "generatedAt": "2026-10-23T00:46:18.695Z",
   "courses": [
     {
       "id": "175",
@@ -1599,6 +1599,26 @@
       "dateModified": "2026-10-12T15:11:56-07:00"
     },
     {
+      "url": "540_Middle_School_Physics_2/kepler-first-law.html",
+      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/kepler-first-law.html",
+      "title": "Kepler's First Law",
+      "description": "Adjust eccentricity to transform a planetary orbit from nearly circular to highly elongated, demonstrating Kepler's First Law that planets travel in elliptical paths around the sun.",
+      "courseId": "540",
+      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_kepler-first-law.png",
+      "dateCreated": "2026-10-22T10:12:14-07:00",
+      "dateModified": "2026-10-22T10:12:14-07:00"
+    },
+    {
+      "url": "540_Middle_School_Physics_2/kepler-second-law.html",
+      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/kepler-second-law.html",
+      "title": "Kepler's Second Law: Equal Times",
+      "description": "A planet moves faster when close to the sun and slower when far away, yet always sweeps out equal areas in equal time intervals. This demonstrates Kepler's Second Law and explains why orbital speeds vary at different distances from the sun.",
+      "courseId": "540",
+      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_kepler-second-law.png",
+      "dateCreated": "2026-10-22T10:12:14-07:00",
+      "dateModified": "2026-10-22T10:12:14-07:00"
+    },
+    {
       "url": "540_Middle_School_Physics_2/position_time_fit.html",
       "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/position_time_fit.html",
       "title": "Position vs. Time Fit",
@@ -1607,6 +1627,16 @@
       "screenshotUrl": "screenshots/540_Middle_School_Physics_2_position_time_fit.png",
       "dateCreated": "2026-10-12T15:23:22-07:00",
       "dateModified": "2026-10-12T15:23:22-07:00"
+    },
+    {
+      "url": "540_Middle_School_Physics_2/projectile-launcher.html",
+      "pagesUrl": "https://aops-curriculum.github.io/540_Middle_School_Physics_2/projectile-launcher.html",
+      "title": "Projectile launcher",
+      "description": "Launch a ball at various angles to investigate how launch angle affects projectile range and the shape of the trajectory.",
+      "courseId": "540",
+      "screenshotUrl": "screenshots/540_Middle_School_Physics_2_projectile-launcher.png",
+      "dateCreated": "2026-10-22T10:12:14-07:00",
+      "dateModified": "2026-10-22T10:12:14-07:00"
     },
     {
       "url": "540_Middle_School_Physics_2/rub_plastics.html",
