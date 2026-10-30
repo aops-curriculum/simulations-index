@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-24T07:32:17.150Z",
+  "generatedAt": "2026-10-30T07:32:40.568Z",
   "courses": [
     {
       "id": "175",
@@ -1506,7 +1506,7 @@
       "courseId": "539",
       "screenshotUrl": "https://aops-curriculum.github.io/539_Middle_School_Physics_1/screenshots/chip_collision.png",
       "dateCreated": "2026-08-12T09:09:06-07:00",
-      "dateModified": "2026-08-12T09:09:06-07:00"
+      "dateModified": "2026-10-29T13:03:02-07:00"
     },
     {
       "url": "539_Middle_School_Physics_1/chip_collision_2d.html",
